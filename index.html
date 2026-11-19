@@ -508,8 +508,8 @@ footer {
 }
 </style>
 
-<!-- Biblioteca para generar PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<!-- jsPDF se carga desde el archivo local -->
+<script src="./jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -535,8 +535,6 @@ footer {
 
 <main>
 
-<!-- INICIO -->
-
 <section class="hero" id="inicio">
   <div>
     <span class="tag">Tu próxima aventura comienza aquí</span>
@@ -560,8 +558,6 @@ footer {
 
   <img src="img/image.png" alt="Vacaciones en la playa">
 </section>
-
-<!-- SERVICIOS -->
 
 <section id="servicios">
 
@@ -1276,6 +1272,7 @@ function generarAcompanantes(cantidad) {
 
   // El viajero 1 es el titular.
   // Los formularios adicionales comienzan desde el viajero 2.
+
   for (let i = 2; i <= cantidad; i++) {
     const tarjeta = document.createElement("fieldset");
     tarjeta.className = "acompanante-card seccion-registro";
@@ -1377,7 +1374,8 @@ function generarAcompanantes(cantidad) {
 
     acompanantesContainer.appendChild(tarjeta);
 
-    // Mostrar el pasaporte solo cuando la respuesta sea "Sí".
+    // Mostrar el número de pasaporte solo cuando la respuesta sea "Sí".
+
     const preguntaPasaporte = document.getElementById(
       "acompananteTienePasaporte" + i
     );
@@ -1402,8 +1400,6 @@ function generarAcompanantes(cantidad) {
     });
   }
 }
-
-/* GENERAR SELECTORES DE ASIENTOS */
 
 function generarAsientos(cantidad) {
   asientosLista.innerHTML = "";
@@ -1434,8 +1430,7 @@ function generarAsientos(cantidad) {
 
     const etiqueta = document.createElement("label");
     etiqueta.htmlFor = "asiento" + i;
-    etiqueta.textContent =
-      "Viajero " + i + " - Elección de asiento";
+    etiqueta.textContent = "Viajero " + i + " - Elección de asiento";
 
     const selector = document.createElement("select");
     selector.id = "asiento" + i;
@@ -1466,8 +1461,6 @@ function generarAsientos(cantidad) {
     asientosLista.appendChild(grupo);
   }
 }
-
-/* ACTUALIZAR CANTIDAD DE VIAJEROS */
 
 function actualizarViajeros() {
   const cantidad = Number(cantidadViajeros.value);
@@ -1520,10 +1513,7 @@ fechaInicio.addEventListener("change", function() {
   }
 });
 
-/* =========================================
-   FACTURA SIMULADA EN PDF Y ASIGNACIÓN
-   ALEATORIA DE AGENTE DE VIAJES
-========================================= */
+/* FACTURA SIMULADA EN PDF Y ASIGNACIÓN DE AGENTE */
 
 const agentesViaje = [
   "Jose de Jesus Tapia Aguilar",
@@ -1531,11 +1521,7 @@ const agentesViaje = [
   "Vilchis Cruz Edgar Leonardo"
 ];
 
-/*
-  Tarifas ilustrativas para el proyecto académico.
-  Los importes están expresados en pesos mexicanos.
-  Se pueden modificar cuando se definan precios reales.
-*/
+// Tarifas ilustrativas para el proyecto académico (MXN).
 
 const tarifasDemo = {
   vuelo: {
@@ -1567,15 +1553,10 @@ const tarifasDemo = {
   iva: 0.16
 };
 
-/* OBTENER VALORES DEL FORMULARIO */
-
 function obtenerValor(id) {
   const elemento = document.getElementById(id);
-
   return elemento ? elemento.value.trim() : "";
 }
-
-/* FORMATO DE MONEDA */
 
 function formatoMoneda(cantidad) {
   return new Intl.NumberFormat("es-MX", {
@@ -1583,8 +1564,6 @@ function formatoMoneda(cantidad) {
     currency: "MXN"
   }).format(cantidad);
 }
-
-/* AGREGAR TEXTO AL PDF */
 
 function agregarTextoPDF(
   doc,
@@ -1612,13 +1591,16 @@ function agregarTextoPDF(
   return y;
 }
 
-/* GENERAR FACTURA */
-
 function generarFacturaPDF(agente) {
+
+  // Comprobar que jsPDF se haya cargado localmente.
 
   if (!window.jspdf || !window.jspdf.jsPDF) {
     alert(
-      "No se pudo cargar el generador de PDF. Verifica tu conexión a internet e inténtalo de nuevo."
+      "No se pudo cargar la biblioteca jsPDF. " +
+      "Verifica que el archivo jspdf.umd.min.js esté " +
+      "en la misma carpeta que ViajaMas.html y que " +
+      "el nombre del archivo sea exactamente igual."
     );
 
     return false;
@@ -1632,13 +1614,7 @@ function generarFacturaPDF(agente) {
   const servicios = obtenerValor("serviciosExtra");
   const atraccion = obtenerValor("tipoAtraccion");
 
-  /*
-    Cálculo de conceptos de demostración.
-
-    Se calcula el costo por la cantidad de viajeros.
-    El hospedaje y los servicios también consideran
-    el número de noches.
-  */
+  // Cálculo de conceptos de demostración.
 
   const costoVuelo =
     (tarifasDemo.vuelo[clase] || 0) * cantidad;
@@ -1698,7 +1674,7 @@ function generarFacturaPDF(agente) {
   const margen = 18;
   let y = 20;
 
-  /* ENCABEZADO DE VIAJAMÁS */
+  // ENCABEZADO DE VIAJAMÁS
 
   doc.setFillColor(16, 42, 67);
   doc.rect(0, 0, 210, 38, "F");
@@ -1720,15 +1696,12 @@ function generarFacturaPDF(agente) {
   });
 
   doc.setFont("helvetica", "normal");
-
   doc.text(
     "Documento académico · No válido como CFDI",
     192,
     25,
     { align: "right" }
   );
-
-  /* TÍTULO Y FOLIO */
 
   y = 49;
 
@@ -1764,12 +1737,8 @@ function generarFacturaPDF(agente) {
 
   y += 10;
 
-  /*
-    DATOS EXCLUSIVOS DEL TITULAR.
-
-    No se consultan ni se imprimen los campos
-    personales de los acompañantes.
-  */
+  // DATOS EXCLUSIVOS DEL TITULAR.
+  // No se consultan ni imprimen los datos de acompañantes.
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
@@ -1811,7 +1780,7 @@ function generarFacturaPDF(agente) {
 
   y += 3;
 
-  /* INFORMACIÓN DEL VIAJE */
+  // INFORMACIÓN DEL VIAJE
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
@@ -1894,7 +1863,7 @@ function generarFacturaPDF(agente) {
     y = 20;
   }
 
-  /* DETALLE DE CONCEPTOS */
+  // DETALLE DE CONCEPTOS
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
@@ -1903,17 +1872,10 @@ function generarFacturaPDF(agente) {
 
   y += 7;
 
-  /* ENCABEZADO DE TABLA */
+  // Encabezado de tabla.
 
   doc.setFillColor(231, 247, 247);
-
-  doc.rect(
-    margen,
-    y - 5,
-    174,
-    9,
-    "F"
-  );
+  doc.rect(margen, y - 5, 174, 9, "F");
 
   doc.setFontSize(9);
 
@@ -1963,7 +1925,7 @@ function generarFacturaPDF(agente) {
     doc.line(margen, y - 2, 192, y - 2);
   });
 
-  /* SUBTOTAL, IVA Y TOTAL */
+  // TOTALES
 
   y += 5;
 
@@ -2005,10 +1967,7 @@ function generarFacturaPDF(agente) {
     y = 20;
   }
 
-  /*
-    EL AGENTE APARECE ÚNICAMENTE EN EL PDF.
-    No se muestra en el formulario ni en la página.
-  */
+  // EL AGENTE APARECE ÚNICAMENTE DENTRO DEL PDF.
 
   doc.setFillColor(244, 248, 251);
 
@@ -2041,7 +2000,7 @@ function generarFacturaPDF(agente) {
 
   y += 22;
 
-  /* AVISO */
+  // AVISO DE FACTURA SIMULADA
 
   doc.setFont("helvetica", "italic");
   doc.setFontSize(8);
@@ -2056,16 +2015,12 @@ function generarFacturaPDF(agente) {
     5
   );
 
-  /* DESCARGAR PDF */
-
   doc.save(`ViajaMas_Factura_${folio}.pdf`);
 
   return true;
 }
 
-/* =========================================
-   VALIDACIÓN DEL FORMULARIO Y FINALIZACIÓN
-========================================= */
+/* VALIDACIÓN DEL FORMULARIO Y FINALIZACIÓN */
 
 document.getElementById("formRegistro").addEventListener(
   "submit",
@@ -2073,17 +2028,12 @@ document.getElementById("formRegistro").addEventListener(
 
     event.preventDefault();
 
-    /* VALIDAR CAMPOS OBLIGATORIOS */
-
     if (!this.checkValidity()) {
       this.reportValidity();
       return;
     }
 
-    /* VALIDAR FECHAS */
-
     if (fechaRegreso.value < fechaInicio.value) {
-
       alert(
         "La fecha de regreso no puede ser anterior a la fecha de inicio."
       );
@@ -2092,32 +2042,37 @@ document.getElementById("formRegistro").addEventListener(
       return;
     }
 
-    /*
-      ASIGNAR AGENTE ALEATORIAMENTE.
-
-      Cada vez que se termina una solicitud,
-      se selecciona uno de los tres agentes.
-    */
+    // ASIGNACIÓN ALEATORIA DE AGENTE
 
     const agenteAsignado = agentesViaje[
-      Math.floor(
-        Math.random() * agentesViaje.length
-      )
+      Math.floor(Math.random() * agentesViaje.length)
     ];
 
-    /* GENERAR FACTURA PDF */
+    try {
 
-    const pdfGenerado =
-      generarFacturaPDF(agenteAsignado);
+      const pdfGenerado =
+        generarFacturaPDF(agenteAsignado);
 
-    if (pdfGenerado) {
+      if (pdfGenerado) {
+        alert(
+          "¡Solicitud terminada! Se asignó un agente de viajes " +
+          "y tu factura simulada PDF se descargará automáticamente."
+        );
+      }
 
-      alert(
-        "¡Solicitud terminada! Se asignó un agente de viajes y tu factura simulada PDF se descargará automáticamente."
+    } catch (error) {
+
+      console.error(
+        "Error al generar la factura PDF:",
+        error
       );
 
+      alert(
+        "Ocurrió un error al generar la factura. " +
+        "Comprueba que jspdf.umd.min.js esté junto al archivo HTML " +
+        "e inténtalo nuevamente."
+      );
     }
-
   }
 );
 
