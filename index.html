@@ -20,6 +20,10 @@
   scroll-behavior: smooth;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
@@ -106,6 +110,9 @@ h1 span {
   border-radius: 10px;
   text-decoration: none;
   font-weight: bold;
+  border: none;
+  cursor: pointer;
+  font: inherit;
 }
 
 .btn:hover {
@@ -156,7 +163,7 @@ section {
   line-height: 1.6;
 }
 
-/* SECCIÓN DE CONSULTAS */
+/* CONSULTAS */
 
 .consultas {
   background: white;
@@ -189,7 +196,7 @@ section {
   line-height: 1.9;
 }
 
-/* COTIZACIÓN */
+/* PRESUPUESTO */
 
 .presupuesto {
   background: #e7f7f7;
@@ -249,7 +256,12 @@ section {
   font-size: .95rem;
 }
 
-/* FORMULARIO DE REGISTRO */
+/* REGISTRO */
+
+.registro {
+  background: #f4f8fb;
+  min-height: 100vh;
+}
 
 .registro-box {
   max-width: 850px;
@@ -261,25 +273,29 @@ section {
 }
 
 .registro-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
-.registro-form fieldset {
-  grid-column: 1 / -1;
+.seccion-registro {
   border: 1px solid #dce6ed;
   border-radius: 12px;
   padding: 22px;
   margin: 0;
-  min-width: 0;
 }
 
-.registro-form legend {
-  padding: 0 8px;
+.seccion-registro legend {
   color: var(--blue);
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: bold;
+  padding: 0 10px;
+}
+
+.campos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
 
 .form-group {
@@ -313,17 +329,15 @@ section {
   border-color: var(--teal);
 }
 
-/* CLASE DE VUELO */
-
-.clase-vuelo {
-  grid-column: 1 / -1;
+.form-group small {
+  color: #627d98;
+  line-height: 1.4;
 }
 
-/* ELECCIÓN DE ASIENTOS */
+/* ASIENTOS */
 
 .asientos-container {
-  grid-column: 1 / -1;
-  margin-top: 10px;
+  margin-top: 20px;
   padding: 20px;
   background: #f4f8fb;
   border-radius: 12px;
@@ -362,13 +376,25 @@ section {
   font: inherit;
 }
 
-/* BOTÓN DEL FORMULARIO */
+/* BOTONES DEL REGISTRO */
 
-.registro-form button {
-  grid-column: 1 / -1;
-  border: 0;
-  cursor: pointer;
-  font: inherit;
+.botones-registro {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.botones-registro .btn {
+  margin-top: 0;
+}
+
+.btn-secundario {
+  background: #627d98;
+}
+
+.btn-secundario:hover {
+  background: #486581;
 }
 
 /* EQUIPO */
@@ -399,31 +425,6 @@ footer {
   background: #071c2c;
   color: #cbd5e1;
   font-size: .9rem;
-}
-
-/* VISTAS PRINCIPAL Y REGISTRO */
-
-[hidden] {
-  display: none !important;
-}
-
-.registro-vista {
-  min-height: 100vh;
-  padding: 35px 7% 60px;
-  background: linear-gradient(135deg,#e7f7f7,#edf4ff);
-}
-
-.registro-encabezado {
-  max-width: 850px;
-  margin: 0 auto 25px;
-}
-
-.registro-encabezado .btn {
-  margin-bottom: 18px;
-}
-
-.registro-encabezado .section-title {
-  margin-top: 20px;
 }
 
 /* RESPONSIVE */
@@ -462,38 +463,36 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  .registro-form {
-    grid-template-columns: 1fr;
-  }
-
-  .form-group.full-width,
-  .registro-form button,
-  .clase-vuelo,
-  .asientos-container {
-    grid-column: 1 / -1;
-  }
-
+  .campos-grid,
   .asientos-lista {
     grid-template-columns: 1fr;
   }
 
   .registro-box {
-    padding: 20px;
+    padding: 18px;
   }
 
-  .registro-form fieldset {
-    padding: 16px;
+  .seccion-registro {
+    padding: 15px;
+  }
+
+  .botones-registro {
+    flex-direction: column;
+  }
+
+  .botones-registro .btn {
+    width: 100%;
+    text-align: center;
   }
 }
-
 </style>
 </head>
 
 <body>
 
-<!-- ================================== -->
-<!-- PÁGINA PRINCIPAL -->
-<!-- ================================== -->
+<!-- =========================
+     PÁGINA PRINCIPAL
+========================= -->
 
 <div id="paginaPrincipal">
 
@@ -505,7 +504,7 @@ footer {
     <a href="#servicios">Servicios</a>
     <a href="#consultas">Opciones</a>
     <a href="#presupuesto">Presupuesto</a>
-    <a href="#registro" id="abrirRegistro">Registro</a>
+    <a href="#" onclick="mostrarRegistro(event)">Registro</a>
     <a href="#nosotros">Equipo</a>
   </nav>
 </header>
@@ -515,9 +514,7 @@ footer {
 <!-- INICIO -->
 
 <section class="hero" id="inicio">
-
   <div>
-
     <span class="tag">Tu próxima aventura comienza aquí</span>
 
     <h1>
@@ -532,21 +529,12 @@ footer {
       y presupuesto.
     </p>
 
-    <a class="btn" href="#servicios">
-      Explorar servicios
-    </a>
-
-    <a class="btn" id="abrirRegistroHero" href="#registro">
+    <a class="btn" href="#" onclick="mostrarRegistro(event)">
       Elaborar solicitud
     </a>
-
   </div>
 
-  <img
-    src="img/image.png"
-    alt="Vacaciones en la playa"
-  >
-
+  <img src="img/image.png" alt="Vacaciones en la playa">
 </section>
 
 <!-- SERVICIOS -->
@@ -554,61 +542,45 @@ footer {
 <section id="servicios">
 
   <div class="section-title">
-
     <h2>Planea tu viaje ideal</h2>
-
     <p>
       Conoce los principales servicios que integran
       nuestro sistema de agencia de viajes.
     </p>
-
   </div>
 
   <div class="cards">
 
     <article class="card">
-
       <div class="emoji">✈️</div>
-
       <h3>Vuelos</h3>
-
       <p>
         Consulta alternativas de vuelos, aerolíneas,
         horarios, fechas y tarifas para encontrar
         opciones adecuadas a tu viaje.
       </p>
-
     </article>
 
     <article class="card">
-
       <div class="emoji">🏨</div>
-
       <h3>Hospedaje</h3>
-
       <p>
         Explora opciones de alojamiento, habitaciones,
         servicios, calificaciones y precios por noche.
       </p>
-
     </article>
 
     <article class="card">
-
       <div class="emoji">🗺️</div>
-
       <h3>Atracciones</h3>
-
       <p>
         Descubre actividades y lugares turísticos,
         consulta sus características, horarios
         y precios de entrada.
       </p>
-
     </article>
 
   </div>
-
 </section>
 
 <!-- CONSULTAS -->
@@ -616,24 +588,18 @@ footer {
 <section class="consultas" id="consultas">
 
   <div class="section-title">
-
     <h2>Opciones para tu viaje</h2>
-
     <p>
       El sistema organiza la información necesaria
       para facilitar la selección de alternativas.
     </p>
-
   </div>
 
   <div class="consulta-grid">
 
     <article class="consulta">
-
       <h3>✈️ Consulta de vuelos</h3>
-
       <p>Se consideran los siguientes datos:</p>
-
       <ul>
         <li>Origen y destino.</li>
         <li>Fecha de salida y llegada.</li>
@@ -641,31 +607,23 @@ footer {
         <li>Horarios disponibles.</li>
         <li>Tarifas y disponibilidad.</li>
       </ul>
-
     </article>
 
     <article class="consulta">
-
       <h3>🏨 Consulta de hospedaje</h3>
-
       <p>Se analizan distintas alternativas:</p>
-
       <ul>
-        <li>Nombre y ubicación del hotel.</li>
-        <li>Tipo de habitación.</li>
+        <li>Nombre y ubicación del hospedaje.</li>
+        <li>Tipo de alojamiento.</li>
         <li>Servicios disponibles.</li>
         <li>Precio por noche.</li>
         <li>Disponibilidad y capacidad.</li>
       </ul>
-
     </article>
 
     <article class="consulta">
-
       <h3>🎡 Consulta de atracciones</h3>
-
       <p>Se identifican actividades de interés:</p>
-
       <ul>
         <li>Nombre de la atracción.</li>
         <li>Ubicación y categoría.</li>
@@ -673,11 +631,9 @@ footer {
         <li>Horarios de visita.</li>
         <li>Precio de entrada.</li>
       </ul>
-
     </article>
 
   </div>
-
 </section>
 
 <!-- PRESUPUESTO -->
@@ -685,41 +641,22 @@ footer {
 <section class="presupuesto" id="presupuesto">
 
   <div class="section-title">
-
     <h2>Comparación y presupuesto</h2>
-
     <p>
       Una vez consultadas las alternativas, el sistema
       permite comparar los costos para elaborar
       un presupuesto estimado del viaje.
     </p>
-
   </div>
 
   <div class="presupuesto-box">
-
     <h3>Elementos considerados en la cotización</h3>
 
     <ul>
-      <li>
-        <strong>Vuelos:</strong>
-        tarifas de las opciones seleccionadas.
-      </li>
-
-      <li>
-        <strong>Hospedaje:</strong>
-        costo por noche y duración de la estancia.
-      </li>
-
-      <li>
-        <strong>Atracciones:</strong>
-        precios de las actividades elegidas.
-      </li>
-
-      <li>
-        <strong>Presupuesto:</strong>
-        comparación del costo estimado con el monto disponible.
-      </li>
+      <li><strong>Vuelos:</strong> tarifas de las opciones seleccionadas.</li>
+      <li><strong>Hospedaje:</strong> costo por noche y duración de la estancia.</li>
+      <li><strong>Atracciones:</strong> precios de las actividades elegidas.</li>
+      <li><strong>Presupuesto:</strong> comparación del costo estimado con el monto disponible.</li>
     </ul>
 
     <p>
@@ -727,7 +664,6 @@ footer {
       organizadas para apoyar al viajero en la
       toma de decisiones.
     </p>
-
   </div>
 
 </section>
@@ -737,85 +673,61 @@ footer {
 <section id="funcionamiento">
 
   <div class="section-title">
-
     <h2>¿Cómo funciona nuestro sistema?</h2>
-
     <p>
       El proceso general de planificación del viaje
       se desarrolla mediante las siguientes etapas.
     </p>
-
   </div>
 
   <div class="pasos">
 
     <article class="paso">
-
       <span class="numero">1</span>
-
       <h3>Solicitud</h3>
-
       <p>
         El viajero proporciona destino,
         fechas y presupuesto.
       </p>
-
     </article>
 
     <article class="paso">
-
       <span class="numero">2</span>
-
       <h3>Consulta</h3>
-
       <p>
         Se revisan opciones de vuelos,
         hospedaje y atracciones.
       </p>
-
     </article>
 
     <article class="paso">
-
       <span class="numero">3</span>
-
       <h3>Comparación</h3>
-
       <p>
         Se analizan las alternativas
         y sus respectivos costos.
       </p>
-
     </article>
 
     <article class="paso">
-
       <span class="numero">4</span>
-
       <h3>Cotización</h3>
-
       <p>
         Se calcula el presupuesto
         estimado del viaje.
       </p>
-
     </article>
 
     <article class="paso">
-
       <span class="numero">5</span>
-
       <h3>Selección</h3>
-
       <p>
         El viajero elige las opciones
         de su preferencia.
       </p>
-
     </article>
 
   </div>
-
 </section>
 
 <!-- EQUIPO -->
@@ -859,68 +771,42 @@ footer {
 
 </div>
 
+<!-- =========================
+     PÁGINA DE REGISTRO
+========================= -->
 
-<!-- ================================== -->
-<!-- APARTADO INDEPENDIENTE DE REGISTRO -->
-<!-- ================================== -->
+<div id="paginaRegistro" hidden>
 
-<section
-  class="registro-vista"
-  id="paginaRegistro"
-  hidden
->
+<header>
+  <div class="logo">Viaja<span>Más</span> ✈</div>
+  <button class="btn btn-secundario" type="button" onclick="mostrarInicio()">
+    Volver al inicio
+  </button>
+</header>
 
-  <div class="registro-encabezado">
+<section class="registro">
 
-    <div class="logo">Viaja<span>Más</span> ✈</div>
-
-    <a
-      class="btn"
-      href="#inicio"
-      id="volverInicio"
-    >
-      ← Volver al inicio
-    </a>
-
-    <div class="section-title">
-
-      <h2>Elaboración de solicitud de viaje</h2>
-
-      <p>
-        Completa los datos solicitados para elaborar
-        tu solicitud de viaje.
-      </p>
-
-    </div>
-
+  <div class="section-title">
+    <h2>Elaborar solicitud de viaje</h2>
+    <p>
+      Completa las siguientes secciones para indicarnos
+      tus datos y preferencias de viaje.
+    </p>
   </div>
-
-
-  <!-- CONTENEDOR DEL FORMULARIO -->
 
   <div class="registro-box">
 
     <form class="registro-form" id="formRegistro">
 
+      <!-- DATOS PERSONALES Y DEL VIAJE -->
 
-      <!-- ================================== -->
-      <!-- SECCIÓN 1: DATOS PERSONALES -->
-      <!-- ================================== -->
+      <fieldset class="seccion-registro">
+        <legend>Datos personales y del viaje</legend>
 
-      <fieldset>
-
-        <legend>1. Datos personales y del viaje</legend>
-
-        <div class="registro-form">
-
-          <!-- NOMBRE COMPLETO -->
+        <div class="campos-grid">
 
           <div class="form-group full-width">
-
-            <label for="nombre">
-              Nombre completo
-            </label>
-
+            <label for="nombre">Nombre completo:</label>
             <input
               type="text"
               id="nombre"
@@ -929,78 +815,46 @@ footer {
               autocomplete="name"
               required
             >
-
           </div>
 
-
-          <!-- EDAD -->
-
           <div class="form-group">
-
-            <label for="edad">
-              Edad
-            </label>
-
+            <label for="edad">Edad:</label>
             <input
               type="number"
               id="edad"
               name="edad"
               min="1"
-              step="1"
-              placeholder="Escribe tu edad"
+              max="120"
+              placeholder="Ej. 25"
               required
             >
-
           </div>
 
-
-          <!-- RFC -->
-
           <div class="form-group">
-
-            <label for="rfc">
-              RFC
-            </label>
-
+            <label for="rfc">RFC:</label>
             <input
               type="text"
               id="rfc"
               name="rfc"
               placeholder="Escribe tu RFC"
+              maxlength="13"
               required
             >
-
           </div>
 
-
-          <!-- DIRECCIÓN -->
-
           <div class="form-group full-width">
-
-            <label for="direccion">
-              Dirección
-            </label>
-
+            <label for="direccion">Dirección:</label>
             <input
               type="text"
               id="direccion"
               name="direccion"
-              placeholder="Calle, número, colonia y ciudad"
-              autocomplete="street-address"
+              placeholder="Calle, número, colonia, ciudad y estado"
               required
             >
-
           </div>
 
-
-          <!-- CORREO -->
-
           <div class="form-group">
-
-            <label for="correo">
-              Correo electrónico
-            </label>
-
+            <label for="correo">Correo electrónico:</label>
             <input
               type="email"
               id="correo"
@@ -1009,38 +863,22 @@ footer {
               autocomplete="email"
               required
             >
-
           </div>
 
-
-          <!-- CELULAR -->
-
           <div class="form-group">
-
-            <label for="celular">
-              Número de celular
-            </label>
-
+            <label for="celular">Celular:</label>
             <input
               type="tel"
               id="celular"
               name="celular"
-              placeholder="Escribe tu número celular"
+              placeholder="Número de celular"
               autocomplete="tel"
               required
             >
-
           </div>
 
-
-          <!-- NACIONALIDAD -->
-
           <div class="form-group">
-
-            <label for="nacionalidad">
-              Nacionalidad
-            </label>
-
+            <label for="nacionalidad">Nacionalidad:</label>
             <input
               type="text"
               id="nacionalidad"
@@ -1048,36 +886,20 @@ footer {
               placeholder="Escribe tu nacionalidad"
               required
             >
-
           </div>
 
-
-          <!-- PASAPORTE -->
-
           <div class="form-group">
-
-            <label for="pasaporte">
-              Número de pasaporte (si cuentas con él)
-            </label>
-
+            <label for="pasaporte">Número de pasaporte (si cuentas con él):</label>
             <input
               type="text"
               id="pasaporte"
               name="pasaporte"
-              placeholder="Número de pasaporte (opcional)"
+              placeholder="Número de pasaporte"
             >
-
           </div>
 
-
-          <!-- NÚMERO DE VIAJEROS -->
-
           <div class="form-group">
-
-            <label for="viajeros">
-              Número de viajeros
-            </label>
-
+            <label for="viajeros">Número de viajeros:</label>
             <input
               type="number"
               id="viajeros"
@@ -1087,18 +909,10 @@ footer {
               placeholder="Ej. 2"
               required
             >
-
           </div>
 
-
-          <!-- ORIGEN -->
-
           <div class="form-group">
-
-            <label for="origen">
-              Origen
-            </label>
-
+            <label for="origen">Origen:</label>
             <input
               type="text"
               id="origen"
@@ -1106,18 +920,10 @@ footer {
               placeholder="Ciudad de salida"
               required
             >
-
           </div>
 
-
-          <!-- DESTINO -->
-
-          <div class="form-group">
-
-            <label for="destino">
-              Destino
-            </label>
-
+          <div class="form-group full-width">
+            <label for="destino">Destino:</label>
             <input
               type="text"
               id="destino"
@@ -1125,279 +931,241 @@ footer {
               placeholder="¿A dónde deseas viajar?"
               required
             >
-
           </div>
 
-
-          <!-- FECHA DE INICIO -->
-
           <div class="form-group">
-
-            <label for="fechaInicio">
-              Fecha de inicio del viaje
-            </label>
-
+            <label for="fechaInicio">Fecha de inicio del viaje:</label>
             <input
               type="date"
               id="fechaInicio"
               name="fechaInicio"
               required
             >
-
           </div>
 
-
-          <!-- FECHA DE REGRESO -->
-
           <div class="form-group">
-
-            <label for="fechaRegreso">
-              Fecha de regreso del viaje
-            </label>
-
+            <label for="fechaRegreso">Fecha de regreso del viaje:</label>
             <input
               type="date"
               id="fechaRegreso"
               name="fechaRegreso"
               required
             >
+          </div>
 
+        </div>
+      </fieldset>
+
+      <!-- VUELOS -->
+
+      <fieldset class="seccion-registro">
+        <legend>Vuelos</legend>
+
+        <div class="campos-grid">
+
+          <div class="form-group">
+            <label for="claseVuelo">Clase de vuelo:</label>
+            <select id="claseVuelo" name="claseVuelo" required>
+              <option value="">Selecciona una clase</option>
+              <option value="Clase económica">Clase económica</option>
+              <option value="Clase ejecutiva">Clase ejecutiva</option>
+              <option value="Primera clase">Primera clase</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="aerolineaEspecifica">
+              ¿Deseas alguna aerolínea en específico?
+            </label>
+            <select id="aerolineaEspecifica" name="aerolineaEspecifica" required>
+              <option value="">Selecciona una opción</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width" id="campoNombreAerolinea" hidden>
+            <label for="nombreAerolinea">Nombre de la aerolínea:</label>
+            <input
+              type="text"
+              id="nombreAerolinea"
+              name="nombreAerolinea"
+              placeholder="Escribe el nombre de la aerolínea"
+            >
           </div>
 
         </div>
 
-      </fieldset>
+        <div class="asientos-container">
+          <h3>Elección de asiento</h3>
 
+          <p>
+            Selecciona el tipo de asiento que prefiera
+            cada viajero.
+          </p>
 
-      <!-- ================================== -->
-      <!-- SECCIÓN 2: VUELOS -->
-      <!-- ================================== -->
-
-      <fieldset>
-
-        <legend>2. Vuelos</legend>
-
-        <div class="registro-form">
-
-
-          <!-- CLASE DE VUELO -->
-
-          <div class="form-group clase-vuelo">
-
-            <label for="claseVuelo">
-              Clase de vuelo
-            </label>
-
-            <select
-              id="claseVuelo"
-              name="claseVuelo"
-              required
-            >
-
-              <option value="" disabled selected>
-                Selecciona una clase de vuelo
-              </option>
-
-              <option value="Clase económica">
-                Clase económica
-              </option>
-
-              <option value="Clase ejecutiva">
-                Clase ejecutiva
-              </option>
-
-              <option value="Primera clase">
-                Primera clase
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <!-- ELECCIÓN DE ASIENTOS -->
-
-          <div class="asientos-container">
-
-            <h3>Elección de asiento</h3>
-
+          <div class="asientos-lista" id="asientosLista">
             <p>
-              Selecciona el tipo de asiento que prefiera
-              cada viajero.
+              Primero indica el número de viajeros
+              en la sección de datos personales.
             </p>
-
-            <div
-              class="asientos-lista"
-              id="asientosLista"
-            >
-
-              <p>
-                Primero indica el número de viajeros
-                para mostrar las opciones de asiento.
-              </p>
-
-            </div>
-
           </div>
-
         </div>
 
       </fieldset>
 
+      <!-- HOSPEDAJE -->
 
-      <!-- ================================== -->
-      <!-- SECCIÓN 3: HOSPEDAJE -->
-      <!-- ================================== -->
+      <fieldset class="seccion-registro">
+        <legend>Hospedaje</legend>
 
-      <fieldset>
-
-        <legend>3. Hospedaje</legend>
-
-        <div class="registro-form">
-
-
-          <!-- TIPO DE HOSPEDAJE -->
+        <div class="campos-grid">
 
           <div class="form-group">
-
-            <label for="tipoHospedaje">
-              Tipo de hospedaje
-            </label>
-
-            <select
-              id="tipoHospedaje"
-              name="tipoHospedaje"
-              required
-            >
-
-              <option value="" disabled selected>
-                Selecciona el tipo de hospedaje
-              </option>
-
-              <option value="Hotel">
-                Hotel
-              </option>
-
-              <option value="Hostal">
-                Hostal
-              </option>
-
-              <option value="Airbnb">
-                Airbnb
-              </option>
-
+            <label for="tipoHospedaje">Tipo de hospedaje:</label>
+            <select id="tipoHospedaje" name="tipoHospedaje" required>
+              <option value="">Selecciona una opción</option>
+              <option value="Hotel">Hotel</option>
+              <option value="Hostal">Hostal</option>
+              <option value="Airbnb">Airbnb</option>
             </select>
-
           </div>
 
-
-          <!-- NÚMERO DE NOCHES -->
-
           <div class="form-group">
-
-            <label for="noches">
-              Número de noches
-            </label>
-
+            <label for="numeroNoches">Número de noches:</label>
             <input
               type="number"
-              id="noches"
-              name="noches"
+              id="numeroNoches"
+              name="numeroNoches"
               min="1"
               step="1"
-              placeholder="Ej. 5 noches"
+              placeholder="Ej. 5"
               required
             >
-
           </div>
 
-
-          <!-- SERVICIOS EXTRA -->
-
           <div class="form-group full-width">
-
-            <label for="serviciosExtra">
-              Servicios extra
-            </label>
-
-            <select
-              id="serviciosExtra"
-              name="serviciosExtra"
-              required
-            >
-
-              <option value="" disabled selected>
-                Selecciona los servicios extra
-              </option>
-
-              <option value="Desayuno incluido">
-                Desayuno incluido
-              </option>
-
-              <option value="Comida incluida">
-                Comida incluida
-              </option>
-
-              <option value="Cena incluida">
-                Cena incluida
-              </option>
-
-              <option value="Todas las anteriores">
-                Todas las anteriores
-              </option>
-
+            <label for="serviciosExtra">Servicios extra:</label>
+            <select id="serviciosExtra" name="serviciosExtra" required>
+              <option value="">Selecciona una opción</option>
+              <option value="Desayuno incluido">Desayuno incluido</option>
+              <option value="Comida incluida">Comida incluida</option>
+              <option value="Cena incluida">Cena incluida</option>
+              <option value="Todas las anteriores">Todas las anteriores</option>
             </select>
+          </div>
 
+          <div class="form-group">
+            <label for="hospedajeEspecifico">
+              ¿Deseas algún hospedaje en específico?
+            </label>
+            <select id="hospedajeEspecifico" name="hospedajeEspecifico" required>
+              <option value="">Selecciona una opción</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width" id="campoNombreHospedaje" hidden>
+            <label for="nombreHospedaje">Nombre del hospedaje:</label>
+            <input
+              type="text"
+              id="nombreHospedaje"
+              name="nombreHospedaje"
+              placeholder="Escribe el nombre del hospedaje"
+            >
           </div>
 
         </div>
-
       </fieldset>
 
+      <!-- ATRACCIONES -->
 
-      <!-- BOTÓN FINAL -->
+      <fieldset class="seccion-registro">
+        <legend>Atracciones</legend>
 
-      <button class="btn" type="submit">
-        Elaborar solicitud
-      </button>
+        <div class="campos-grid">
+
+          <div class="form-group full-width">
+            <label for="tipoAtraccion">Tipo de atracción:</label>
+            <select id="tipoAtraccion" name="tipoAtraccion" required>
+              <option value="">Selecciona una opción</option>
+              <option value="Naturales">
+                Naturales (playas, montañas, etc.)
+              </option>
+              <option value="Culturales o históricos">
+                Culturales o históricos (museos, monumentos, etc.)
+              </option>
+              <option value="Recreativos y de entretenimiento">
+                Recreativos y de entretenimiento (obras de teatro, eventos, etc.)
+              </option>
+              <option value="Ninguna">Ninguna</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="atraccionEspecifica">
+              ¿Deseas alguna atracción en específico?
+            </label>
+            <select id="atraccionEspecifica" name="atraccionEspecifica" required>
+              <option value="">Selecciona una opción</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width" id="campoNombreAtraccion" hidden>
+            <label for="nombreAtraccion">Nombre de la atracción:</label>
+            <input
+              type="text"
+              id="nombreAtraccion"
+              name="nombreAtraccion"
+              placeholder="Escribe el nombre de la atracción"
+            >
+          </div>
+
+        </div>
+      </fieldset>
+
+      <!-- BOTONES -->
+
+      <div class="botones-registro">
+        <button
+          class="btn btn-secundario"
+          type="button"
+          onclick="mostrarInicio()"
+        >
+          Volver al inicio
+        </button>
+
+        <button class="btn" type="submit">
+          Elaborar solicitud
+        </button>
+      </div>
 
     </form>
 
   </div>
-
 </section>
 
+<footer>
+  © 2026 ViajaMás · Proyecto académico de Ingeniería de Software · Equipo 7
+</footer>
 
-<!-- ================================== -->
-<!-- JAVASCRIPT -->
-<!-- ================================== -->
+</div>
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
 
 <script>
 
-// ==================================
-// CAMBIO ENTRE PÁGINAS
-// ==================================
+/* CAMBIAR ENTRE PÁGINA PRINCIPAL Y REGISTRO */
 
-const paginaPrincipal =
-  document.getElementById("paginaPrincipal");
-
-const paginaRegistro =
-  document.getElementById("paginaRegistro");
-
-const abrirRegistro =
-  document.getElementById("abrirRegistro");
-
-const abrirRegistroHero =
-  document.getElementById("abrirRegistroHero");
-
-const volverInicio =
-  document.getElementById("volverInicio");
-
-
-// MOSTRAR APARTADO DE REGISTRO
+const paginaPrincipal = document.getElementById("paginaPrincipal");
+const paginaRegistro = document.getElementById("paginaRegistro");
 
 function mostrarRegistro(event) {
-
   if (event) {
     event.preventDefault();
   }
@@ -1406,284 +1174,174 @@ function mostrarRegistro(event) {
   paginaRegistro.hidden = false;
 
   window.scrollTo(0, 0);
-
 }
 
-
-// REGRESAR A LA PÁGINA PRINCIPAL
-
-function mostrarInicio(event) {
-
-  if (event) {
-    event.preventDefault();
-  }
-
+function mostrarInicio() {
   paginaRegistro.hidden = true;
   paginaPrincipal.hidden = false;
 
   window.scrollTo(0, 0);
-
 }
 
+/* PREGUNTAS CONDICIONALES */
 
-// EVENTOS DE LOS BOTONES
+function configurarPreguntaCondicional(idSelect, idCampo, idInput) {
+  const select = document.getElementById(idSelect);
+  const campo = document.getElementById(idCampo);
+  const input = document.getElementById(idInput);
 
-abrirRegistro.addEventListener(
-  "click",
-  mostrarRegistro
+  function actualizarCampo() {
+    const mostrar = select.value === "si";
+
+    campo.hidden = !mostrar;
+    input.required = mostrar;
+
+    if (!mostrar) {
+      input.value = "";
+    }
+  }
+
+  select.addEventListener("change", actualizarCampo);
+
+  actualizarCampo();
+}
+
+/* AEROLÍNEA */
+
+configurarPreguntaCondicional(
+  "aerolineaEspecifica",
+  "campoNombreAerolinea",
+  "nombreAerolinea"
 );
 
-abrirRegistroHero.addEventListener(
-  "click",
-  mostrarRegistro
+/* HOSPEDAJE */
+
+configurarPreguntaCondicional(
+  "hospedajeEspecifico",
+  "campoNombreHospedaje",
+  "nombreHospedaje"
 );
 
-volverInicio.addEventListener(
-  "click",
-  mostrarInicio
+/* ATRACCIONES */
+
+configurarPreguntaCondicional(
+  "atraccionEspecifica",
+  "campoNombreAtraccion",
+  "nombreAtraccion"
 );
 
+/* GENERAR UN SELECTOR DE ASIENTO POR VIAJERO */
 
-// ==================================
-// GENERACIÓN DINÁMICA DE ASIENTOS
-// ==================================
-
-const cantidadViajeros =
-  document.getElementById("viajeros");
-
-const asientosLista =
-  document.getElementById("asientosLista");
-
-
-// GENERAR UN SELECTOR POR CADA VIAJERO
+const cantidadViajeros = document.getElementById("viajeros");
+const asientosLista = document.getElementById("asientosLista");
 
 function generarAsientos() {
-
-  const cantidad = Number(cantidadViajeros.value);
-
-  // Limpiar los selectores anteriores
+  const cantidad = parseInt(cantidadViajeros.value, 10);
 
   asientosLista.innerHTML = "";
 
-  // Verificar que exista una cantidad válida
-
-  if (
-    !Number.isInteger(cantidad) ||
-    cantidad < 1
-  ) {
-
+  if (!Number.isInteger(cantidad) || cantidad < 1) {
     const mensaje = document.createElement("p");
-
     mensaje.textContent =
-      "Primero indica el número de viajeros para mostrar las opciones de asiento.";
+      "Primero indica el número de viajeros en la sección de datos personales.";
 
     asientosLista.appendChild(mensaje);
-
     return;
-
   }
 
+  // Evita generar una cantidad excesiva de selectores.
+  if (cantidad > 20) {
+    const mensaje = document.createElement("p");
+    mensaje.textContent =
+      "Para este formulario, el máximo permitido es de 20 viajeros.";
 
-  // Crear un selector individual por viajero
+    asientosLista.appendChild(mensaje);
+    return;
+  }
 
   for (let i = 1; i <= cantidad; i++) {
-
     const grupo = document.createElement("div");
-
     grupo.className = "asiento-viajero";
 
-
-    // ETIQUETA DEL VIAJERO
-
     const etiqueta = document.createElement("label");
-
     etiqueta.htmlFor = "asiento" + i;
-
-    etiqueta.textContent =
-      "Viajero " + i + " - Elección de asiento";
-
-
-    // SELECTOR DE ASIENTO
+    etiqueta.textContent = "Viajero " + i + " - Elección de asiento";
 
     const selector = document.createElement("select");
-
     selector.id = "asiento" + i;
-
     selector.name = "asientos[]";
-
     selector.required = true;
 
+    const opcionInicial = document.createElement("option");
+    opcionInicial.value = "";
+    opcionInicial.textContent = "Selecciona tu asiento";
+    opcionInicial.disabled = true;
+    opcionInicial.selected = true;
 
-    // OPCIÓN INICIAL
+    const opcionVentanilla = document.createElement("option");
+    opcionVentanilla.value = "Ventanilla";
+    opcionVentanilla.textContent = "Ventanilla";
 
-    const indicacion = document.createElement("option");
+    const opcionPasillo = document.createElement("option");
+    opcionPasillo.value = "Pasillo";
+    opcionPasillo.textContent = "Pasillo";
 
-    indicacion.value = "";
+    selector.appendChild(opcionInicial);
+    selector.appendChild(opcionVentanilla);
+    selector.appendChild(opcionPasillo);
 
-    indicacion.disabled = true;
-
-    indicacion.selected = true;
-
-    indicacion.textContent = "Selecciona tu asiento";
-
-
-    // OPCIÓN VENTANILLA
-
-    const ventanilla = document.createElement("option");
-
-    ventanilla.value = "Ventanilla";
-
-    ventanilla.textContent = "Ventanilla";
-
-
-    // OPCIÓN PASILLO
-
-    const pasillo = document.createElement("option");
-
-    pasillo.value = "Pasillo";
-
-    pasillo.textContent = "Pasillo";
-
-
-    // AGREGAR OPCIONES AL SELECTOR
-
-    selector.append(
-      indicacion,
-      ventanilla,
-      pasillo
-    );
-
-
-    // AGREGAR ELEMENTOS AL CONTENEDOR
-
-    grupo.append(
-      etiqueta,
-      selector
-    );
+    grupo.appendChild(etiqueta);
+    grupo.appendChild(selector);
 
     asientosLista.appendChild(grupo);
-
   }
-
 }
 
+cantidadViajeros.addEventListener("input", generarAsientos);
 
-// ACTUALIZAR ASIENTOS CUANDO CAMBIE EL NÚMERO DE VIAJEROS
-
-cantidadViajeros.addEventListener(
-  "input",
-  generarAsientos
-);
-
-cantidadViajeros.addEventListener(
-  "change",
-  generarAsientos
-);
-
-
-// ==================================
-// VALIDACIÓN DE FECHAS
-// ==================================
-
-const fechaInicio =
-  document.getElementById("fechaInicio");
-
-const fechaRegreso =
-  document.getElementById("fechaRegreso");
-
-
-// LA FECHA DE REGRESO DEBE SER POSTERIOR
-// O IGUAL A LA FECHA DE INICIO
-
-fechaInicio.addEventListener(
-  "change",
-  function() {
-
-    fechaRegreso.min = this.value;
-
-    if (
-      fechaRegreso.value &&
-      fechaRegreso.value < this.value
-    ) {
-
-      fechaRegreso.value = "";
-
-    }
-
+cantidadViajeros.addEventListener("change", function() {
+  if (this.value !== "" && Number(this.value) < 1) {
+    this.value = 1;
   }
-);
 
+  generarAsientos();
+});
 
-fechaRegreso.addEventListener(
-  "change",
-  function() {
+/* VALIDACIÓN DE FECHAS */
 
-    if (
-      fechaInicio.value &&
-      this.value < fechaInicio.value
-    ) {
+const fechaInicio = document.getElementById("fechaInicio");
+const fechaRegreso = document.getElementById("fechaRegreso");
 
-      alert(
-        "La fecha de regreso no puede ser anterior a la fecha de inicio."
-      );
+fechaInicio.addEventListener("change", function() {
+  fechaRegreso.min = this.value;
 
-      this.value = "";
-
-    }
-
+  if (fechaRegreso.value && fechaRegreso.value < this.value) {
+    fechaRegreso.value = "";
   }
-);
+});
 
-
-// ==================================
-// VALIDACIÓN DEL FORMULARIO
-// ==================================
+/* VALIDACIÓN DEL FORMULARIO */
 
 document.getElementById("formRegistro").addEventListener(
   "submit",
   function(event) {
-
-    // Evitar que la página se recargue
-
     event.preventDefault();
 
-
-    // COMPROBAR QUE TODOS LOS CAMPOS SEAN VÁLIDOS
-
     if (!this.checkValidity()) {
-
       this.reportValidity();
-
       return;
-
     }
 
-
-    // VERIFICAR LAS FECHAS
-
-    if (
-      fechaInicio.value &&
-      fechaRegreso.value < fechaInicio.value
-    ) {
-
-      alert(
-        "La fecha de regreso debe ser igual o posterior a la fecha de inicio."
-      );
-
+    if (fechaRegreso.value < fechaInicio.value) {
+      alert("La fecha de regreso no puede ser anterior a la fecha de inicio.");
       fechaRegreso.focus();
-
       return;
-
     }
-
-
-    // MENSAJE DE CONFIRMACIÓN
 
     alert(
-      "La solicitud se completó correctamente. " +
-      "En esta versión de demostración, los datos todavía no se guardan ni se envían a un servidor."
+      "¡Solicitud elaborada correctamente! " +
+      "Los datos del formulario están completos."
     );
-
   }
 );
 
