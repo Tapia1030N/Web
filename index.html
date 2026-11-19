@@ -508,7 +508,6 @@ footer {
 }
 </style>
 
-<!-- jsPDF se carga desde el archivo local -->
 <script src="./jspdf.umd.min.js"></script>
 </head>
 
@@ -535,6 +534,8 @@ footer {
 
 <main>
 
+<!-- INICIO -->
+
 <section class="hero" id="inicio">
   <div>
     <span class="tag">Tu próxima aventura comienza aquí</span>
@@ -558,6 +559,8 @@ footer {
 
   <img src="img/image.png" alt="Vacaciones en la playa">
 </section>
+
+<!-- SERVICIOS -->
 
 <section id="servicios">
 
@@ -909,7 +912,22 @@ footer {
           </div>
 
           <div class="form-group">
-            <label for="pasaporte">Número de pasaporte (si cuentas con él):</label>
+            <label for="titularTienePasaporte">
+              ¿Cuentas con número de pasaporte?
+            </label>
+            <select
+              id="titularTienePasaporte"
+              name="tienePasaporte"
+              required
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="campoPasaporteTitular" hidden>
+            <label for="pasaporte">Número de pasaporte:</label>
             <input
               type="text"
               id="pasaporte"
@@ -1233,6 +1251,14 @@ function configurarPreguntaCondicional(idSelect, idCampo, idInput) {
   actualizarCampo();
 }
 
+/* PASAPORTE DEL TITULAR */
+
+configurarPreguntaCondicional(
+  "titularTienePasaporte",
+  "campoPasaporteTitular",
+  "pasaporte"
+);
+
 /* AEROLÍNEA */
 
 configurarPreguntaCondicional(
@@ -1270,9 +1296,8 @@ function generarAcompanantes(cantidad) {
     return;
   }
 
-  // El viajero 1 es el titular.
+  // El viajero 1 es el titular: sus datos ya están en el formulario principal.
   // Los formularios adicionales comienzan desde el viajero 2.
-
   for (let i = 2; i <= cantidad; i++) {
     const tarjeta = document.createElement("fieldset");
     tarjeta.className = "acompanante-card seccion-registro";
@@ -1375,22 +1400,18 @@ function generarAcompanantes(cantidad) {
     acompanantesContainer.appendChild(tarjeta);
 
     // Mostrar el número de pasaporte solo cuando la respuesta sea "Sí".
-
     const preguntaPasaporte = document.getElementById(
       "acompananteTienePasaporte" + i
     );
-
     const campoPasaporte = document.getElementById(
       "campoPasaporteAcompanante" + i
     );
-
     const inputPasaporte = document.getElementById(
       "acompanantePasaporte" + i
     );
 
     preguntaPasaporte.addEventListener("change", function() {
       const mostrar = this.value === "si";
-
       campoPasaporte.hidden = !mostrar;
       inputPasaporte.required = mostrar;
 
@@ -1406,20 +1427,16 @@ function generarAsientos(cantidad) {
 
   if (!Number.isInteger(cantidad) || cantidad < 1) {
     const mensaje = document.createElement("p");
-
     mensaje.textContent =
       "Primero indica el número de viajeros en la sección de datos personales.";
-
     asientosLista.appendChild(mensaje);
     return;
   }
 
   if (cantidad > 20) {
     const mensaje = document.createElement("p");
-
     mensaje.textContent =
       "Para este formulario, el máximo permitido es de 20 viajeros.";
-
     asientosLista.appendChild(mensaje);
     return;
   }
@@ -1457,7 +1474,6 @@ function generarAsientos(cantidad) {
 
     grupo.appendChild(etiqueta);
     grupo.appendChild(selector);
-
     asientosLista.appendChild(grupo);
   }
 }
@@ -1480,10 +1496,8 @@ function actualizarViajeros() {
     asientosLista.innerHTML = "";
 
     const mensaje = document.createElement("p");
-
     mensaje.textContent =
       "Para este formulario, el máximo permitido es de 20 viajeros.";
-
     asientosLista.appendChild(mensaje);
     return;
   }
@@ -1522,34 +1536,30 @@ const agentesViaje = [
 ];
 
 // Tarifas ilustrativas para el proyecto académico (MXN).
-
+// Se pueden modificar cuando se definan precios reales.
 const tarifasDemo = {
   vuelo: {
     "Clase económica": 4500,
     "Clase ejecutiva": 8500,
     "Primera clase": 15000
   },
-
   hospedaje: {
     "Hotel": 1800,
     "Hostal": 850,
     "Airbnb": 1300
   },
-
   alimentos: {
     "Desayuno incluido": 250,
     "Comida incluida": 350,
     "Cena incluida": 350,
     "Todas las anteriores": 950
   },
-
   atracciones: {
     "Naturales": 600,
     "Culturales o históricos": 450,
     "Recreativos y de entretenimiento": 800,
     "Ninguna": 0
   },
-
   iva: 0.16
 };
 
@@ -1565,297 +1575,111 @@ function formatoMoneda(cantidad) {
   }).format(cantidad);
 }
 
-function agregarTextoPDF(
-  doc,
-  texto,
-  x,
-  y,
-  anchoMaximo = 175,
-  salto = 7
-) {
-  const lineas = doc.splitTextToSize(
-    String(texto || "-"),
-    anchoMaximo
-  );
-
+function agregarTextoPDF(doc, texto, x, y, anchoMaximo = 175, salto = 7) {
+  const lineas = doc.splitTextToSize(String(texto || "-"), anchoMaximo);
   lineas.forEach((linea) => {
     if (y > 275) {
       doc.addPage();
       y = 20;
     }
-
     doc.text(linea, x, y);
     y += salto;
   });
-
   return y;
 }
 
 function generarFacturaPDF(agente) {
-
-  // Comprobar que jsPDF se haya cargado localmente.
-
   if (!window.jspdf || !window.jspdf.jsPDF) {
-    alert(
-      "No se pudo cargar la biblioteca jsPDF. " +
-      "Verifica que el archivo jspdf.umd.min.js esté " +
-      "en la misma carpeta que ViajaMas.html y que " +
-      "el nombre del archivo sea exactamente igual."
-    );
-
+    alert("No se pudo cargar la biblioteca jsPDF. Verifica que el archivo jspdf.umd.min.js esté en la misma carpeta que ViajaMas.html y que el nombre del archivo sea exactamente igual.");
     return false;
   }
 
   const cantidad = Number(obtenerValor("viajeros")) || 1;
   const noches = Number(obtenerValor("numeroNoches")) || 1;
-
   const clase = obtenerValor("claseVuelo");
   const hospedaje = obtenerValor("tipoHospedaje");
   const servicios = obtenerValor("serviciosExtra");
   const atraccion = obtenerValor("tipoAtraccion");
 
   // Cálculo de conceptos de demostración.
-
-  const costoVuelo =
-    (tarifasDemo.vuelo[clase] || 0) * cantidad;
-
-  const costoHospedaje =
-    (tarifasDemo.hospedaje[hospedaje] || 0) *
-    noches *
-    cantidad;
-
-  const costoServicios =
-    (tarifasDemo.alimentos[servicios] || 0) *
-    noches *
-    cantidad;
-
-  const costoAtracciones =
-    (tarifasDemo.atracciones[atraccion] || 0) *
-    cantidad;
+  const costoVuelo = (tarifasDemo.vuelo[clase] || 0) * cantidad;
+  const costoHospedaje = (tarifasDemo.hospedaje[hospedaje] || 0) * noches * cantidad;
+  const costoServicios = (tarifasDemo.alimentos[servicios] || 0) * noches * cantidad;
+  const costoAtracciones = (tarifasDemo.atracciones[atraccion] || 0) * cantidad;
 
   const conceptos = [
-    {
-      nombre: `Vuelo - ${clase}`,
-      detalle: `${cantidad} viajero(s)`,
-      total: costoVuelo
-    },
-    {
-      nombre: `Hospedaje - ${hospedaje}`,
-      detalle: `${noches} noche(s) · ${cantidad} viajero(s)`,
-      total: costoHospedaje
-    },
-    {
-      nombre: `Servicios adicionales - ${servicios}`,
-      detalle: `${noches} noche(s) · ${cantidad} viajero(s)`,
-      total: costoServicios
-    },
-    {
-      nombre: `Atracciones - ${atraccion}`,
-      detalle: `${cantidad} viajero(s)`,
-      total: costoAtracciones
-    }
+    { nombre: `Vuelo - ${clase}`, detalle: `${cantidad} viajero(s)`, total: costoVuelo },
+    { nombre: `Hospedaje - ${hospedaje}`, detalle: `${noches} noche(s) · ${cantidad} viajero(s)`, total: costoHospedaje },
+    { nombre: `Servicios adicionales - ${servicios}`, detalle: `${noches} noche(s) · ${cantidad} viajero(s)`, total: costoServicios },
+    { nombre: `Atracciones - ${atraccion}`, detalle: `${cantidad} viajero(s)`, total: costoAtracciones }
   ].filter(concepto => concepto.total > 0);
 
-  const subtotal = conceptos.reduce(
-    (suma, concepto) => suma + concepto.total,
-    0
-  );
-
+  const subtotal = conceptos.reduce((suma, concepto) => suma + concepto.total, 0);
   const iva = subtotal * tarifasDemo.iva;
   const total = subtotal + iva;
 
   const { jsPDF } = window.jspdf;
-
-  const doc = new jsPDF({
-    unit: "mm",
-    format: "a4"
-  });
-
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
   const margen = 18;
   let y = 20;
 
-  // ENCABEZADO DE VIAJAMÁS
-
+  // Encabezado de ViajaMás.
   doc.setFillColor(16, 42, 67);
   doc.rect(0, 0, 210, 38, "F");
-
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
-
   doc.text("ViajaMas", margen, 17);
-
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-
   doc.text("Agencia de viajes", margen, 25);
-
   doc.setFont("helvetica", "bold");
-  doc.text("FACTURA SIMULADA", 192, 17, {
-    align: "right"
-  });
-
+  doc.text("FACTURA SIMULADA", 192, 17, { align: "right" });
   doc.setFont("helvetica", "normal");
-  doc.text(
-    "Documento académico · No válido como CFDI",
-    192,
-    25,
-    { align: "right" }
-  );
+  doc.text("Documento académico · No válido como CFDI", 192, 25, { align: "right" });
 
   y = 49;
-
   doc.setTextColor(16, 42, 67);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(15);
-
-  doc.text(
-    "Comprobante de servicios de viaje",
-    margen,
-    y
-  );
-
+  doc.text("Comprobante de servicios de viaje", margen, y);
   y += 9;
 
-  const folio =
-    "VM-" + Date.now().toString().slice(-8);
-
-  const fechaEmision =
-    new Date().toLocaleDateString("es-MX");
-
+  const folio = "VM-" + Date.now().toString().slice(-8);
+  const fechaEmision = new Date().toLocaleDateString("es-MX");
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-
   doc.text(`Folio: ${folio}`, margen, y);
-
-  doc.text(
-    `Fecha de emisión: ${fechaEmision}`,
-    192,
-    y,
-    { align: "right" }
-  );
-
+  doc.text(`Fecha de emisión: ${fechaEmision}`, 192, y, { align: "right" });
   y += 10;
 
-  // DATOS EXCLUSIVOS DEL TITULAR.
-  // No se consultan ni imprimen los datos de acompañantes.
-
+  // Datos exclusivos del titular. No se consultan ni imprimen los campos de acompañantes.
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
-
   doc.text("DATOS DEL TITULAR", margen, y);
-
   y += 7;
-
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-
-  y = agregarTextoPDF(
-    doc,
-    `Nombre: ${obtenerValor("nombre")}`,
-    margen,
-    y
-  );
-
-  y = agregarTextoPDF(
-    doc,
-    `RFC: ${obtenerValor("rfc")}`,
-    margen,
-    y
-  );
-
-  y = agregarTextoPDF(
-    doc,
-    `Dirección: ${obtenerValor("direccion")}`,
-    margen,
-    y
-  );
-
-  y = agregarTextoPDF(
-    doc,
-    `Correo: ${obtenerValor("correo")}   |   Celular: ${obtenerValor("celular")}`,
-    margen,
-    y
-  );
-
+  y = agregarTextoPDF(doc, `Nombre: ${obtenerValor("nombre")}`, margen, y);
+  y = agregarTextoPDF(doc, `RFC: ${obtenerValor("rfc")}`, margen, y);
+  y = agregarTextoPDF(doc, `Dirección: ${obtenerValor("direccion")}`, margen, y);
+  y = agregarTextoPDF(doc, `Correo: ${obtenerValor("correo")}   |   Celular: ${obtenerValor("celular")}`, margen, y);
   y += 3;
 
-  // INFORMACIÓN DEL VIAJE
-
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
-
   doc.text("INFORMACIÓN DEL VIAJE", margen, y);
-
   y += 7;
-
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-
-  y = agregarTextoPDF(
-    doc,
-    `Ruta: ${obtenerValor("origen")} → ${obtenerValor("destino")}`,
-    margen,
-    y
-  );
-
-  y = agregarTextoPDF(
-    doc,
-    `Salida: ${obtenerValor("fechaInicio")}   |   Regreso: ${obtenerValor("fechaRegreso")}`,
-    margen,
-    y
-  );
-
-  y = agregarTextoPDF(
-    doc,
-    `Número de viajeros: ${cantidad}`,
-    margen,
-    y
-  );
-
-  y = agregarTextoPDF(
-    doc,
-    `Clase de vuelo: ${clase}`,
-    margen,
-    y
-  );
-
-  y = agregarTextoPDF(
-    doc,
-    `Aerolínea solicitada: ${
-      obtenerValor("aerolineaEspecifica") === "si"
-        ? obtenerValor("nombreAerolinea")
-        : "Sin preferencia específica"
-    }`,
-    margen,
-    y
-  );
-
-  y = agregarTextoPDF(
-    doc,
-    `Hospedaje: ${hospedaje} · ${noches} noche(s)`,
-    margen,
-    y
-  );
-
-  y = agregarTextoPDF(
-    doc,
-    `Servicios extra: ${servicios}`,
-    margen,
-    y
-  );
-
-  y = agregarTextoPDF(
-    doc,
-    `Atracciones: ${atraccion}${
-      obtenerValor("atraccionEspecifica") === "si"
-        ? " · " + obtenerValor("nombreAtraccion")
-        : ""
-    }`,
-    margen,
-    y
-  );
-
+  y = agregarTextoPDF(doc, `Ruta: ${obtenerValor("origen")} → ${obtenerValor("destino")}`, margen, y);
+  y = agregarTextoPDF(doc, `Salida: ${obtenerValor("fechaInicio")}   |   Regreso: ${obtenerValor("fechaRegreso")}`, margen, y);
+  y = agregarTextoPDF(doc, `Número de viajeros: ${cantidad}`, margen, y);
+  y = agregarTextoPDF(doc, `Clase de vuelo: ${clase}`, margen, y);
+  y = agregarTextoPDF(doc, `Aerolínea solicitada: ${obtenerValor("aerolineaEspecifica") === "si" ? obtenerValor("nombreAerolinea") : "Sin preferencia específica"}`, margen, y);
+  y = agregarTextoPDF(doc, `Hospedaje: ${hospedaje} · ${noches} noche(s)`, margen, y);
+  y = agregarTextoPDF(doc, `Servicios extra: ${servicios}`, margen, y);
+  y = agregarTextoPDF(doc, `Atracciones: ${atraccion}${obtenerValor("atraccionEspecifica") === "si" ? " · " + obtenerValor("nombreAtraccion") : ""}`, margen, y);
   y += 5;
 
   if (y > 220) {
@@ -1863,103 +1687,47 @@ function generarFacturaPDF(agente) {
     y = 20;
   }
 
-  // DETALLE DE CONCEPTOS
-
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
-
   doc.text("DETALLE DE CONCEPTOS", margen, y);
-
   y += 7;
 
   // Encabezado de tabla.
-
   doc.setFillColor(231, 247, 247);
   doc.rect(margen, y - 5, 174, 9, "F");
-
   doc.setFontSize(9);
-
   doc.text("Concepto", margen + 2, y);
   doc.text("Descripción", 105, y);
-
-  doc.text("Importe", 190, y, {
-    align: "right"
-  });
-
+  doc.text("Importe", 190, y, { align: "right" });
   y += 9;
 
   doc.setFont("helvetica", "normal");
-
   conceptos.forEach((concepto) => {
-
     if (y > 265) {
       doc.addPage();
       y = 20;
     }
-
-    const nombreLineas =
-      doc.splitTextToSize(concepto.nombre, 65);
-
-    const detalleLineas =
-      doc.splitTextToSize(concepto.detalle, 55);
-
-    const alto =
-      Math.max(
-        nombreLineas.length,
-        detalleLineas.length
-      ) * 5 + 4;
-
+    const nombreLineas = doc.splitTextToSize(concepto.nombre, 65);
+    const detalleLineas = doc.splitTextToSize(concepto.detalle, 55);
+    const alto = Math.max(nombreLineas.length, detalleLineas.length) * 5 + 4;
     doc.text(nombreLineas, margen + 2, y);
     doc.text(detalleLineas, 105, y);
-
-    doc.text(
-      formatoMoneda(concepto.total),
-      190,
-      y,
-      { align: "right" }
-    );
-
+    doc.text(formatoMoneda(concepto.total), 190, y, { align: "right" });
     y += alto;
-
     doc.setDrawColor(220, 230, 237);
     doc.line(margen, y - 2, 192, y - 2);
   });
 
-  // TOTALES
-
   y += 5;
-
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
-
-  doc.text(
-    `Subtotal: ${formatoMoneda(subtotal)}`,
-    190,
-    y,
-    { align: "right" }
-  );
-
+  doc.text(`Subtotal: ${formatoMoneda(subtotal)}`, 190, y, { align: "right" });
   y += 7;
-
-  doc.text(
-    `IVA (16%): ${formatoMoneda(iva)}`,
-    190,
-    y,
-    { align: "right" }
-  );
-
+  doc.text(`IVA (16%): ${formatoMoneda(iva)}`, 190, y, { align: "right" });
   y += 8;
-
   doc.setFont("helvetica", "bold");
   doc.setFontSize(13);
-
-  doc.text(
-    `TOTAL: ${formatoMoneda(total)}`,
-    190,
-    y,
-    { align: "right" }
-  );
-
+  doc.text(`TOTAL: ${formatoMoneda(total)}`, 190, y, { align: "right" });
   y += 13;
 
   if (y > 270) {
@@ -1967,45 +1735,19 @@ function generarFacturaPDF(agente) {
     y = 20;
   }
 
-  // EL AGENTE APARECE ÚNICAMENTE DENTRO DEL PDF.
-
+  // El agente aparece únicamente dentro del PDF.
   doc.setFillColor(244, 248, 251);
-
-  doc.roundedRect(
-    margen,
-    y - 5,
-    174,
-    18,
-    3,
-    3,
-    "F"
-  );
-
+  doc.roundedRect(margen, y - 5, 174, 18, 3, 3, "F");
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
-
-  doc.text(
-    "Agente de viajes asignado:",
-    margen + 4,
-    y + 2
-  );
-
+  doc.text("Agente de viajes asignado:", margen + 4, y + 2);
   doc.setFont("helvetica", "normal");
-
-  doc.text(
-    agente,
-    margen + 4,
-    y + 8
-  );
-
+  doc.text(agente, margen + 4, y + 8);
   y += 22;
-
-  // AVISO DE FACTURA SIMULADA
 
   doc.setFont("helvetica", "italic");
   doc.setFontSize(8);
   doc.setTextColor(100, 116, 139);
-
   agregarTextoPDF(
     doc,
     "Aviso: Este documento contiene precios estimados de demostración para un proyecto académico. No constituye una factura fiscal, CFDI, comprobante de pago ni reserva confirmada.",
@@ -2016,7 +1758,6 @@ function generarFacturaPDF(agente) {
   );
 
   doc.save(`ViajaMas_Factura_${folio}.pdf`);
-
   return true;
 }
 
@@ -2025,7 +1766,6 @@ function generarFacturaPDF(agente) {
 document.getElementById("formRegistro").addEventListener(
   "submit",
   function(event) {
-
     event.preventDefault();
 
     if (!this.checkValidity()) {
@@ -2034,44 +1774,24 @@ document.getElementById("formRegistro").addEventListener(
     }
 
     if (fechaRegreso.value < fechaInicio.value) {
-      alert(
-        "La fecha de regreso no puede ser anterior a la fecha de inicio."
-      );
-
+      alert("La fecha de regreso no puede ser anterior a la fecha de inicio.");
       fechaRegreso.focus();
       return;
     }
-
-    // ASIGNACIÓN ALEATORIA DE AGENTE
 
     const agenteAsignado = agentesViaje[
       Math.floor(Math.random() * agentesViaje.length)
     ];
 
     try {
-
-      const pdfGenerado =
-        generarFacturaPDF(agenteAsignado);
+      const pdfGenerado = generarFacturaPDF(agenteAsignado);
 
       if (pdfGenerado) {
-        alert(
-          "¡Solicitud terminada! Se asignó un agente de viajes " +
-          "y tu factura simulada PDF se descargará automáticamente."
-        );
+        alert("¡Solicitud terminada! Se asignó un agente de viajes y tu factura simulada PDF se descargará automáticamente.");
       }
-
     } catch (error) {
-
-      console.error(
-        "Error al generar la factura PDF:",
-        error
-      );
-
-      alert(
-        "Ocurrió un error al generar la factura. " +
-        "Comprueba que jspdf.umd.min.js esté junto al archivo HTML " +
-        "e inténtalo nuevamente."
-      );
+      console.error("Error al generar la factura PDF:", error);
+      alert("Ocurrió un error al generar la factura. Comprueba que jspdf.umd.min.js esté junto al archivo HTML e inténtalo nuevamente.");
     }
   }
 );
