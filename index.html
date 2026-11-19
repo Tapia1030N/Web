@@ -334,7 +334,7 @@ section {
   line-height: 1.4;
 }
 
-/* ACOMPAÑANTES */
+/* DATOS DE ACOMPAÑANTES */
 
 .acompanantes-container {
   margin-top: 20px;
@@ -350,10 +350,9 @@ section {
   border-radius: 12px;
 }
 
-.acompanante-card legend {
+.acompanante-card h3 {
+  margin-top: 0;
   color: var(--blue);
-  font-weight: bold;
-  padding: 0 10px;
 }
 
 /* ASIENTOS */
@@ -398,7 +397,7 @@ section {
   font: inherit;
 }
 
-/* BOTONES */
+/* BOTONES DEL REGISTRO */
 
 .botones-registro {
   display: flex;
@@ -508,6 +507,9 @@ footer {
   }
 }
 </style>
+
+<!-- Biblioteca para generar PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -532,6 +534,8 @@ footer {
 </header>
 
 <main>
+
+<!-- INICIO -->
 
 <section class="hero" id="inicio">
   <div>
@@ -560,6 +564,7 @@ footer {
 <!-- SERVICIOS -->
 
 <section id="servicios">
+
   <div class="section-title">
     <h2>Planea tu viaje ideal</h2>
     <p>
@@ -569,6 +574,7 @@ footer {
   </div>
 
   <div class="cards">
+
     <article class="card">
       <div class="emoji">✈️</div>
       <h3>Vuelos</h3>
@@ -597,12 +603,14 @@ footer {
         y precios de entrada.
       </p>
     </article>
+
   </div>
 </section>
 
 <!-- CONSULTAS -->
 
 <section class="consultas" id="consultas">
+
   <div class="section-title">
     <h2>Opciones para tu viaje</h2>
     <p>
@@ -612,6 +620,7 @@ footer {
   </div>
 
   <div class="consulta-grid">
+
     <article class="consulta">
       <h3>✈️ Consulta de vuelos</h3>
       <p>Se consideran los siguientes datos:</p>
@@ -647,12 +656,14 @@ footer {
         <li>Precio de entrada.</li>
       </ul>
     </article>
+
   </div>
 </section>
 
 <!-- PRESUPUESTO -->
 
 <section class="presupuesto" id="presupuesto">
+
   <div class="section-title">
     <h2>Comparación y presupuesto</h2>
     <p>
@@ -664,6 +675,7 @@ footer {
 
   <div class="presupuesto-box">
     <h3>Elementos considerados en la cotización</h3>
+
     <ul>
       <li><strong>Vuelos:</strong> tarifas de las opciones seleccionadas.</li>
       <li><strong>Hospedaje:</strong> costo por noche y duración de la estancia.</li>
@@ -677,11 +689,13 @@ footer {
       toma de decisiones.
     </p>
   </div>
+
 </section>
 
 <!-- FUNCIONAMIENTO -->
 
 <section id="funcionamiento">
+
   <div class="section-title">
     <h2>¿Cómo funciona nuestro sistema?</h2>
     <p>
@@ -691,6 +705,7 @@ footer {
   </div>
 
   <div class="pasos">
+
     <article class="paso">
       <span class="numero">1</span>
       <h3>Solicitud</h3>
@@ -735,12 +750,14 @@ footer {
         de su preferencia.
       </p>
     </article>
+
   </div>
 </section>
 
 <!-- EQUIPO -->
 
 <section class="about" id="nosotros">
+
   <h2>Acerca de ViajaMás</h2>
 
   <p>
@@ -753,6 +770,7 @@ footer {
   </p>
 
   <div class="equipo">
+
     <p>
       <strong>
         Proyecto de Ingeniería de Software · Equipo 7
@@ -764,7 +782,9 @@ footer {
       <li>Tapia Aguilar José de Jesús</li>
       <li>Vilchis Cruz Edgar Leonardo</li>
     </ul>
+
   </div>
+
 </section>
 
 </main>
@@ -783,12 +803,7 @@ footer {
 
 <header>
   <div class="logo">Viaja<span>Más</span> ✈</div>
-
-  <button
-    class="btn btn-secundario"
-    type="button"
-    onclick="mostrarInicio()"
-  >
+  <button class="btn btn-secundario" type="button" onclick="mostrarInicio()">
     Volver al inicio
   </button>
 </header>
@@ -807,10 +822,10 @@ footer {
 
     <form class="registro-form" id="formRegistro">
 
-      <!-- DATOS DEL TITULAR Y DEL VIAJE -->
+      <!-- DATOS PERSONALES Y DEL VIAJE -->
 
       <fieldset class="seccion-registro">
-        <legend>Datos personales y del viaje (titular)</legend>
+        <legend>Datos personales y del viaje</legend>
 
         <div class="campos-grid">
 
@@ -898,30 +913,7 @@ footer {
           </div>
 
           <div class="form-group">
-            <label for="tienePasaporteTitular">
-              ¿Cuentas con número de pasaporte?
-            </label>
-
-            <select
-              id="tienePasaporteTitular"
-              name="tienePasaporte"
-              required
-            >
-              <option value="">Selecciona una opción</option>
-              <option value="si">Sí</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-
-          <div
-            class="form-group"
-            id="campoPasaporteTitular"
-            hidden
-          >
-            <label for="pasaporte">
-              Número de pasaporte:
-            </label>
-
+            <label for="pasaporte">Número de pasaporte (si cuentas con él):</label>
             <input
               type="text"
               id="pasaporte"
@@ -942,10 +934,6 @@ footer {
               placeholder="Ej. 2"
               required
             >
-            <small>
-              El primer viajero será el titular de la reservación.
-              Máximo 20 viajeros.
-            </small>
           </div>
 
           <div class="form-group">
@@ -992,14 +980,11 @@ footer {
 
         </div>
 
-        <!-- AQUÍ SE GENERAN LOS FORMULARIOS DE ACOMPAÑANTES -->
-
         <div
           id="acompanantesContainer"
           class="acompanantes-container"
           aria-live="polite"
         ></div>
-
       </fieldset>
 
       <!-- VUELOS -->
@@ -1011,7 +996,6 @@ footer {
 
           <div class="form-group">
             <label for="claseVuelo">Clase de vuelo:</label>
-
             <select id="claseVuelo" name="claseVuelo" required>
               <option value="">Selecciona una clase</option>
               <option value="Clase económica">Clase económica</option>
@@ -1024,27 +1008,15 @@ footer {
             <label for="aerolineaEspecifica">
               ¿Deseas alguna aerolínea en específico?
             </label>
-
-            <select
-              id="aerolineaEspecifica"
-              name="aerolineaEspecifica"
-              required
-            >
+            <select id="aerolineaEspecifica" name="aerolineaEspecifica" required>
               <option value="">Selecciona una opción</option>
               <option value="si">Sí</option>
               <option value="no">No</option>
             </select>
           </div>
 
-          <div
-            class="form-group full-width"
-            id="campoNombreAerolinea"
-            hidden
-          >
-            <label for="nombreAerolinea">
-              Nombre de la aerolínea:
-            </label>
-
+          <div class="form-group full-width" id="campoNombreAerolinea" hidden>
+            <label for="nombreAerolinea">Nombre de la aerolínea:</label>
             <input
               type="text"
               id="nombreAerolinea"
@@ -1082,7 +1054,6 @@ footer {
 
           <div class="form-group">
             <label for="tipoHospedaje">Tipo de hospedaje:</label>
-
             <select id="tipoHospedaje" name="tipoHospedaje" required>
               <option value="">Selecciona una opción</option>
               <option value="Hotel">Hotel</option>
@@ -1093,7 +1064,6 @@ footer {
 
           <div class="form-group">
             <label for="numeroNoches">Número de noches:</label>
-
             <input
               type="number"
               id="numeroNoches"
@@ -1107,7 +1077,6 @@ footer {
 
           <div class="form-group full-width">
             <label for="serviciosExtra">Servicios extra:</label>
-
             <select id="serviciosExtra" name="serviciosExtra" required>
               <option value="">Selecciona una opción</option>
               <option value="Desayuno incluido">Desayuno incluido</option>
@@ -1121,27 +1090,15 @@ footer {
             <label for="hospedajeEspecifico">
               ¿Deseas algún hospedaje en específico?
             </label>
-
-            <select
-              id="hospedajeEspecifico"
-              name="hospedajeEspecifico"
-              required
-            >
+            <select id="hospedajeEspecifico" name="hospedajeEspecifico" required>
               <option value="">Selecciona una opción</option>
               <option value="si">Sí</option>
               <option value="no">No</option>
             </select>
           </div>
 
-          <div
-            class="form-group full-width"
-            id="campoNombreHospedaje"
-            hidden
-          >
-            <label for="nombreHospedaje">
-              Nombre del hospedaje:
-            </label>
-
+          <div class="form-group full-width" id="campoNombreHospedaje" hidden>
+            <label for="nombreHospedaje">Nombre del hospedaje:</label>
             <input
               type="text"
               id="nombreHospedaje"
@@ -1162,22 +1119,17 @@ footer {
 
           <div class="form-group full-width">
             <label for="tipoAtraccion">Tipo de atracción:</label>
-
             <select id="tipoAtraccion" name="tipoAtraccion" required>
               <option value="">Selecciona una opción</option>
-
               <option value="Naturales">
                 Naturales (playas, montañas, etc.)
               </option>
-
               <option value="Culturales o históricos">
                 Culturales o históricos (museos, monumentos, etc.)
               </option>
-
               <option value="Recreativos y de entretenimiento">
                 Recreativos y de entretenimiento (obras de teatro, eventos, etc.)
               </option>
-
               <option value="Ninguna">Ninguna</option>
             </select>
           </div>
@@ -1186,27 +1138,15 @@ footer {
             <label for="atraccionEspecifica">
               ¿Deseas alguna atracción en específico?
             </label>
-
-            <select
-              id="atraccionEspecifica"
-              name="atraccionEspecifica"
-              required
-            >
+            <select id="atraccionEspecifica" name="atraccionEspecifica" required>
               <option value="">Selecciona una opción</option>
               <option value="si">Sí</option>
               <option value="no">No</option>
             </select>
           </div>
 
-          <div
-            class="form-group full-width"
-            id="campoNombreAtraccion"
-            hidden
-          >
-            <label for="nombreAtraccion">
-              Nombre de la atracción:
-            </label>
-
+          <div class="form-group full-width" id="campoNombreAtraccion" hidden>
+            <label for="nombreAtraccion">Nombre de la atracción:</label>
             <input
               type="text"
               id="nombreAtraccion"
@@ -1221,7 +1161,6 @@ footer {
       <!-- BOTONES -->
 
       <div class="botones-registro">
-
         <button
           class="btn btn-secundario"
           type="button"
@@ -1231,9 +1170,8 @@ footer {
         </button>
 
         <button class="btn" type="submit">
-          Elaborar solicitud
+          Terminar solicitud
         </button>
-
       </div>
 
     </form>
@@ -1276,16 +1214,14 @@ function mostrarInicio() {
   window.scrollTo(0, 0);
 }
 
-/* PREGUNTAS CONDICIONALES GENERALES */
+/* PREGUNTAS CONDICIONALES */
 
 function configurarPreguntaCondicional(idSelect, idCampo, idInput) {
-
   const select = document.getElementById(idSelect);
   const campo = document.getElementById(idCampo);
   const input = document.getElementById(idInput);
 
   function actualizarCampo() {
-
     const mostrar = select.value === "si";
 
     campo.hidden = !mostrar;
@@ -1294,21 +1230,12 @@ function configurarPreguntaCondicional(idSelect, idCampo, idInput) {
     if (!mostrar) {
       input.value = "";
     }
-
   }
 
   select.addEventListener("change", actualizarCampo);
 
   actualizarCampo();
 }
-
-/* PASAPORTE DEL TITULAR */
-
-configurarPreguntaCondicional(
-  "tienePasaporteTitular",
-  "campoPasaporteTitular",
-  "pasaporte"
-);
 
 /* AEROLÍNEA */
 
@@ -1334,61 +1261,43 @@ configurarPreguntaCondicional(
   "nombreAtraccion"
 );
 
-/* ELEMENTOS DE VIAJEROS */
+/* GENERAR LOS DATOS DE ACOMPAÑANTES Y UN SELECTOR DE ASIENTO POR VIAJERO */
 
 const cantidadViajeros = document.getElementById("viajeros");
 const asientosLista = document.getElementById("asientosLista");
 const acompanantesContainer = document.getElementById("acompanantesContainer");
 
-/* GENERAR LOS FORMULARIOS DE ACOMPAÑANTES */
-
 function generarAcompanantes(cantidad) {
-
   acompanantesContainer.innerHTML = "";
 
-  if (
-    !Number.isInteger(cantidad) ||
-    cantidad < 1 ||
-    cantidad > 20
-  ) {
+  if (!Number.isInteger(cantidad) || cantidad < 1 || cantidad > 20) {
     return;
   }
 
-  /*
-    El viajero 1 es el titular.
-    Los formularios adicionales empiezan en el viajero 2.
-  */
-
+  // El viajero 1 es el titular.
+  // Los formularios adicionales comienzan desde el viajero 2.
   for (let i = 2; i <= cantidad; i++) {
-
     const tarjeta = document.createElement("fieldset");
-
     tarjeta.className = "acompanante-card seccion-registro";
 
     tarjeta.innerHTML = `
       <legend>Datos del viajero ${i}</legend>
 
       <div class="campos-grid">
-
         <div class="form-group full-width">
-          <label for="acompananteNombre${i}">
-            Nombre completo:
-          </label>
-
+          <label for="acompananteNombre${i}">Nombre completo:</label>
           <input
             type="text"
             id="acompananteNombre${i}"
             name="acompanantes[${i}][nombre]"
             placeholder="Nombre completo del viajero"
+            autocomplete="off"
             required
           >
         </div>
 
         <div class="form-group">
-          <label for="acompananteEdad${i}">
-            Edad:
-          </label>
-
+          <label for="acompananteEdad${i}">Edad:</label>
           <input
             type="number"
             id="acompananteEdad${i}"
@@ -1401,10 +1310,7 @@ function generarAcompanantes(cantidad) {
         </div>
 
         <div class="form-group">
-          <label for="acompananteNacionalidad${i}">
-            Nacionalidad:
-          </label>
-
+          <label for="acompananteNacionalidad${i}">Nacionalidad:</label>
           <input
             type="text"
             id="acompananteNacionalidad${i}"
@@ -1418,7 +1324,6 @@ function generarAcompanantes(cantidad) {
           <label for="acompananteTienePasaporte${i}">
             ¿Cuentas con número de pasaporte?
           </label>
-
           <select
             id="acompananteTienePasaporte${i}"
             name="acompanantes[${i}][tienePasaporte]"
@@ -1435,10 +1340,7 @@ function generarAcompanantes(cantidad) {
           id="campoPasaporteAcompanante${i}"
           hidden
         >
-          <label for="acompanantePasaporte${i}">
-            Número de pasaporte:
-          </label>
-
+          <label for="acompanantePasaporte${i}">Número de pasaporte:</label>
           <input
             type="text"
             id="acompanantePasaporte${i}"
@@ -1448,40 +1350,34 @@ function generarAcompanantes(cantidad) {
         </div>
 
         <div class="form-group">
-          <label for="acompananteCelular${i}">
-            Celular:
-          </label>
-
+          <label for="acompananteCelular${i}">Celular:</label>
           <input
             type="tel"
             id="acompananteCelular${i}"
             name="acompanantes[${i}][celular]"
             placeholder="Número de celular"
+            autocomplete="off"
             required
           >
         </div>
 
         <div class="form-group">
-          <label for="acompananteCorreo${i}">
-            Correo electrónico:
-          </label>
-
+          <label for="acompananteCorreo${i}">Correo electrónico:</label>
           <input
             type="email"
             id="acompananteCorreo${i}"
             name="acompanantes[${i}][correo]"
             placeholder="ejemplo@correo.com"
+            autocomplete="off"
             required
           >
         </div>
-
       </div>
     `;
 
     acompanantesContainer.appendChild(tarjeta);
 
-    /* PREGUNTA CONDICIONAL DEL PASAPORTE DEL ACOMPAÑANTE */
-
+    // Mostrar el pasaporte solo cuando la respuesta sea "Sí".
     const preguntaPasaporte = document.getElementById(
       "acompananteTienePasaporte" + i
     );
@@ -1495,86 +1391,68 @@ function generarAcompanantes(cantidad) {
     );
 
     preguntaPasaporte.addEventListener("change", function() {
-
       const mostrar = this.value === "si";
 
       campoPasaporte.hidden = !mostrar;
-
       inputPasaporte.required = mostrar;
 
       if (!mostrar) {
         inputPasaporte.value = "";
       }
-
     });
-
   }
-
 }
 
-/* GENERAR UN SELECTOR DE ASIENTO POR CADA VIAJERO */
+/* GENERAR SELECTORES DE ASIENTOS */
 
 function generarAsientos(cantidad) {
-
   asientosLista.innerHTML = "";
 
   if (!Number.isInteger(cantidad) || cantidad < 1) {
-
     const mensaje = document.createElement("p");
 
     mensaje.textContent =
       "Primero indica el número de viajeros en la sección de datos personales.";
 
     asientosLista.appendChild(mensaje);
-
     return;
   }
 
   if (cantidad > 20) {
-
     const mensaje = document.createElement("p");
 
     mensaje.textContent =
       "Para este formulario, el máximo permitido es de 20 viajeros.";
 
     asientosLista.appendChild(mensaje);
-
     return;
   }
 
   for (let i = 1; i <= cantidad; i++) {
-
     const grupo = document.createElement("div");
-
     grupo.className = "asiento-viajero";
 
     const etiqueta = document.createElement("label");
-
     etiqueta.htmlFor = "asiento" + i;
-
     etiqueta.textContent =
       "Viajero " + i + " - Elección de asiento";
 
     const selector = document.createElement("select");
-
     selector.id = "asiento" + i;
     selector.name = "asientos[]";
     selector.required = true;
 
     const opcionInicial = document.createElement("option");
-
     opcionInicial.value = "";
     opcionInicial.textContent = "Selecciona tu asiento";
     opcionInicial.disabled = true;
     opcionInicial.selected = true;
 
     const opcionVentanilla = document.createElement("option");
-
     opcionVentanilla.value = "Ventanilla";
     opcionVentanilla.textContent = "Ventanilla";
 
     const opcionPasillo = document.createElement("option");
-
     opcionPasillo.value = "Pasillo";
     opcionPasillo.textContent = "Pasillo";
 
@@ -1586,15 +1464,12 @@ function generarAsientos(cantidad) {
     grupo.appendChild(selector);
 
     asientosLista.appendChild(grupo);
-
   }
-
 }
 
-/* ACTUALIZAR LOS FORMULARIOS SEGÚN LA CANTIDAD DE VIAJEROS */
+/* ACTUALIZAR CANTIDAD DE VIAJEROS */
 
 function actualizarViajeros() {
-
   const cantidad = Number(cantidadViajeros.value);
 
   if (
@@ -1602,79 +1477,34 @@ function actualizarViajeros() {
     !Number.isInteger(cantidad) ||
     cantidad < 1
   ) {
-
     generarAcompanantes(0);
-
-    asientosLista.innerHTML = `
-      <p>
-        Primero indica el número de viajeros
-        en la sección de datos personales.
-      </p>
-    `;
-
+    generarAsientos(0);
     return;
   }
 
   if (cantidad > 20) {
-
     acompanantesContainer.innerHTML = "";
+    asientosLista.innerHTML = "";
 
-    asientosLista.innerHTML = `
-      <p>
-        Para este formulario, el máximo permitido es de 20 viajeros.
-      </p>
-    `;
+    const mensaje = document.createElement("p");
 
+    mensaje.textContent =
+      "Para este formulario, el máximo permitido es de 20 viajeros.";
+
+    asientosLista.appendChild(mensaje);
     return;
   }
 
   generarAcompanantes(cantidad);
-
   generarAsientos(cantidad);
-
 }
 
-/* EVENTO DEL NÚMERO DE VIAJEROS */
-
-cantidadViajeros.addEventListener("input", function() {
-
-  const cantidad = Number(this.value);
-
-  if (this.value === "") {
-    actualizarViajeros();
-    return;
-  }
-
-  if (cantidad > 20) {
-    acompanantesContainer.innerHTML = "";
-
-    asientosLista.innerHTML = `
-      <p>
-        El máximo permitido es de 20 viajeros.
-      </p>
-    `;
-
-    return;
-  }
-
-  if (Number.isInteger(cantidad) && cantidad >= 1) {
-    actualizarViajeros();
-  }
-
-});
-
 cantidadViajeros.addEventListener("change", function() {
-
   if (this.value !== "" && Number(this.value) < 1) {
     this.value = 1;
   }
 
-  if (Number(this.value) > 20) {
-    this.value = 20;
-  }
-
   actualizarViajeros();
-
 });
 
 /* VALIDACIÓN DE FECHAS */
@@ -1683,19 +1513,559 @@ const fechaInicio = document.getElementById("fechaInicio");
 const fechaRegreso = document.getElementById("fechaRegreso");
 
 fechaInicio.addEventListener("change", function() {
-
   fechaRegreso.min = this.value;
 
-  if (
-    fechaRegreso.value &&
-    fechaRegreso.value < this.value
-  ) {
+  if (fechaRegreso.value && fechaRegreso.value < this.value) {
     fechaRegreso.value = "";
   }
-
 });
 
-/* VALIDACIÓN DEL FORMULARIO */
+/* =========================================
+   FACTURA SIMULADA EN PDF Y ASIGNACIÓN
+   ALEATORIA DE AGENTE DE VIAJES
+========================================= */
+
+const agentesViaje = [
+  "Jose de Jesus Tapia Aguilar",
+  "Martinez Reyes Osvaldo Jair",
+  "Vilchis Cruz Edgar Leonardo"
+];
+
+/*
+  Tarifas ilustrativas para el proyecto académico.
+  Los importes están expresados en pesos mexicanos.
+  Se pueden modificar cuando se definan precios reales.
+*/
+
+const tarifasDemo = {
+  vuelo: {
+    "Clase económica": 4500,
+    "Clase ejecutiva": 8500,
+    "Primera clase": 15000
+  },
+
+  hospedaje: {
+    "Hotel": 1800,
+    "Hostal": 850,
+    "Airbnb": 1300
+  },
+
+  alimentos: {
+    "Desayuno incluido": 250,
+    "Comida incluida": 350,
+    "Cena incluida": 350,
+    "Todas las anteriores": 950
+  },
+
+  atracciones: {
+    "Naturales": 600,
+    "Culturales o históricos": 450,
+    "Recreativos y de entretenimiento": 800,
+    "Ninguna": 0
+  },
+
+  iva: 0.16
+};
+
+/* OBTENER VALORES DEL FORMULARIO */
+
+function obtenerValor(id) {
+  const elemento = document.getElementById(id);
+
+  return elemento ? elemento.value.trim() : "";
+}
+
+/* FORMATO DE MONEDA */
+
+function formatoMoneda(cantidad) {
+  return new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN"
+  }).format(cantidad);
+}
+
+/* AGREGAR TEXTO AL PDF */
+
+function agregarTextoPDF(
+  doc,
+  texto,
+  x,
+  y,
+  anchoMaximo = 175,
+  salto = 7
+) {
+  const lineas = doc.splitTextToSize(
+    String(texto || "-"),
+    anchoMaximo
+  );
+
+  lineas.forEach((linea) => {
+    if (y > 275) {
+      doc.addPage();
+      y = 20;
+    }
+
+    doc.text(linea, x, y);
+    y += salto;
+  });
+
+  return y;
+}
+
+/* GENERAR FACTURA */
+
+function generarFacturaPDF(agente) {
+
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert(
+      "No se pudo cargar el generador de PDF. Verifica tu conexión a internet e inténtalo de nuevo."
+    );
+
+    return false;
+  }
+
+  const cantidad = Number(obtenerValor("viajeros")) || 1;
+  const noches = Number(obtenerValor("numeroNoches")) || 1;
+
+  const clase = obtenerValor("claseVuelo");
+  const hospedaje = obtenerValor("tipoHospedaje");
+  const servicios = obtenerValor("serviciosExtra");
+  const atraccion = obtenerValor("tipoAtraccion");
+
+  /*
+    Cálculo de conceptos de demostración.
+
+    Se calcula el costo por la cantidad de viajeros.
+    El hospedaje y los servicios también consideran
+    el número de noches.
+  */
+
+  const costoVuelo =
+    (tarifasDemo.vuelo[clase] || 0) * cantidad;
+
+  const costoHospedaje =
+    (tarifasDemo.hospedaje[hospedaje] || 0) *
+    noches *
+    cantidad;
+
+  const costoServicios =
+    (tarifasDemo.alimentos[servicios] || 0) *
+    noches *
+    cantidad;
+
+  const costoAtracciones =
+    (tarifasDemo.atracciones[atraccion] || 0) *
+    cantidad;
+
+  const conceptos = [
+    {
+      nombre: `Vuelo - ${clase}`,
+      detalle: `${cantidad} viajero(s)`,
+      total: costoVuelo
+    },
+    {
+      nombre: `Hospedaje - ${hospedaje}`,
+      detalle: `${noches} noche(s) · ${cantidad} viajero(s)`,
+      total: costoHospedaje
+    },
+    {
+      nombre: `Servicios adicionales - ${servicios}`,
+      detalle: `${noches} noche(s) · ${cantidad} viajero(s)`,
+      total: costoServicios
+    },
+    {
+      nombre: `Atracciones - ${atraccion}`,
+      detalle: `${cantidad} viajero(s)`,
+      total: costoAtracciones
+    }
+  ].filter(concepto => concepto.total > 0);
+
+  const subtotal = conceptos.reduce(
+    (suma, concepto) => suma + concepto.total,
+    0
+  );
+
+  const iva = subtotal * tarifasDemo.iva;
+  const total = subtotal + iva;
+
+  const { jsPDF } = window.jspdf;
+
+  const doc = new jsPDF({
+    unit: "mm",
+    format: "a4"
+  });
+
+  const margen = 18;
+  let y = 20;
+
+  /* ENCABEZADO DE VIAJAMÁS */
+
+  doc.setFillColor(16, 42, 67);
+  doc.rect(0, 0, 210, 38, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+
+  doc.text("ViajaMas", margen, 17);
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+
+  doc.text("Agencia de viajes", margen, 25);
+
+  doc.setFont("helvetica", "bold");
+  doc.text("FACTURA SIMULADA", 192, 17, {
+    align: "right"
+  });
+
+  doc.setFont("helvetica", "normal");
+
+  doc.text(
+    "Documento académico · No válido como CFDI",
+    192,
+    25,
+    { align: "right" }
+  );
+
+  /* TÍTULO Y FOLIO */
+
+  y = 49;
+
+  doc.setTextColor(16, 42, 67);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(15);
+
+  doc.text(
+    "Comprobante de servicios de viaje",
+    margen,
+    y
+  );
+
+  y += 9;
+
+  const folio =
+    "VM-" + Date.now().toString().slice(-8);
+
+  const fechaEmision =
+    new Date().toLocaleDateString("es-MX");
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+
+  doc.text(`Folio: ${folio}`, margen, y);
+
+  doc.text(
+    `Fecha de emisión: ${fechaEmision}`,
+    192,
+    y,
+    { align: "right" }
+  );
+
+  y += 10;
+
+  /*
+    DATOS EXCLUSIVOS DEL TITULAR.
+
+    No se consultan ni se imprimen los campos
+    personales de los acompañantes.
+  */
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+
+  doc.text("DATOS DEL TITULAR", margen, y);
+
+  y += 7;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+
+  y = agregarTextoPDF(
+    doc,
+    `Nombre: ${obtenerValor("nombre")}`,
+    margen,
+    y
+  );
+
+  y = agregarTextoPDF(
+    doc,
+    `RFC: ${obtenerValor("rfc")}`,
+    margen,
+    y
+  );
+
+  y = agregarTextoPDF(
+    doc,
+    `Dirección: ${obtenerValor("direccion")}`,
+    margen,
+    y
+  );
+
+  y = agregarTextoPDF(
+    doc,
+    `Correo: ${obtenerValor("correo")}   |   Celular: ${obtenerValor("celular")}`,
+    margen,
+    y
+  );
+
+  y += 3;
+
+  /* INFORMACIÓN DEL VIAJE */
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+
+  doc.text("INFORMACIÓN DEL VIAJE", margen, y);
+
+  y += 7;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+
+  y = agregarTextoPDF(
+    doc,
+    `Ruta: ${obtenerValor("origen")} → ${obtenerValor("destino")}`,
+    margen,
+    y
+  );
+
+  y = agregarTextoPDF(
+    doc,
+    `Salida: ${obtenerValor("fechaInicio")}   |   Regreso: ${obtenerValor("fechaRegreso")}`,
+    margen,
+    y
+  );
+
+  y = agregarTextoPDF(
+    doc,
+    `Número de viajeros: ${cantidad}`,
+    margen,
+    y
+  );
+
+  y = agregarTextoPDF(
+    doc,
+    `Clase de vuelo: ${clase}`,
+    margen,
+    y
+  );
+
+  y = agregarTextoPDF(
+    doc,
+    `Aerolínea solicitada: ${
+      obtenerValor("aerolineaEspecifica") === "si"
+        ? obtenerValor("nombreAerolinea")
+        : "Sin preferencia específica"
+    }`,
+    margen,
+    y
+  );
+
+  y = agregarTextoPDF(
+    doc,
+    `Hospedaje: ${hospedaje} · ${noches} noche(s)`,
+    margen,
+    y
+  );
+
+  y = agregarTextoPDF(
+    doc,
+    `Servicios extra: ${servicios}`,
+    margen,
+    y
+  );
+
+  y = agregarTextoPDF(
+    doc,
+    `Atracciones: ${atraccion}${
+      obtenerValor("atraccionEspecifica") === "si"
+        ? " · " + obtenerValor("nombreAtraccion")
+        : ""
+    }`,
+    margen,
+    y
+  );
+
+  y += 5;
+
+  if (y > 220) {
+    doc.addPage();
+    y = 20;
+  }
+
+  /* DETALLE DE CONCEPTOS */
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+
+  doc.text("DETALLE DE CONCEPTOS", margen, y);
+
+  y += 7;
+
+  /* ENCABEZADO DE TABLA */
+
+  doc.setFillColor(231, 247, 247);
+
+  doc.rect(
+    margen,
+    y - 5,
+    174,
+    9,
+    "F"
+  );
+
+  doc.setFontSize(9);
+
+  doc.text("Concepto", margen + 2, y);
+  doc.text("Descripción", 105, y);
+
+  doc.text("Importe", 190, y, {
+    align: "right"
+  });
+
+  y += 9;
+
+  doc.setFont("helvetica", "normal");
+
+  conceptos.forEach((concepto) => {
+
+    if (y > 265) {
+      doc.addPage();
+      y = 20;
+    }
+
+    const nombreLineas =
+      doc.splitTextToSize(concepto.nombre, 65);
+
+    const detalleLineas =
+      doc.splitTextToSize(concepto.detalle, 55);
+
+    const alto =
+      Math.max(
+        nombreLineas.length,
+        detalleLineas.length
+      ) * 5 + 4;
+
+    doc.text(nombreLineas, margen + 2, y);
+    doc.text(detalleLineas, 105, y);
+
+    doc.text(
+      formatoMoneda(concepto.total),
+      190,
+      y,
+      { align: "right" }
+    );
+
+    y += alto;
+
+    doc.setDrawColor(220, 230, 237);
+    doc.line(margen, y - 2, 192, y - 2);
+  });
+
+  /* SUBTOTAL, IVA Y TOTAL */
+
+  y += 5;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+
+  doc.text(
+    `Subtotal: ${formatoMoneda(subtotal)}`,
+    190,
+    y,
+    { align: "right" }
+  );
+
+  y += 7;
+
+  doc.text(
+    `IVA (16%): ${formatoMoneda(iva)}`,
+    190,
+    y,
+    { align: "right" }
+  );
+
+  y += 8;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+
+  doc.text(
+    `TOTAL: ${formatoMoneda(total)}`,
+    190,
+    y,
+    { align: "right" }
+  );
+
+  y += 13;
+
+  if (y > 270) {
+    doc.addPage();
+    y = 20;
+  }
+
+  /*
+    EL AGENTE APARECE ÚNICAMENTE EN EL PDF.
+    No se muestra en el formulario ni en la página.
+  */
+
+  doc.setFillColor(244, 248, 251);
+
+  doc.roundedRect(
+    margen,
+    y - 5,
+    174,
+    18,
+    3,
+    3,
+    "F"
+  );
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+
+  doc.text(
+    "Agente de viajes asignado:",
+    margen + 4,
+    y + 2
+  );
+
+  doc.setFont("helvetica", "normal");
+
+  doc.text(
+    agente,
+    margen + 4,
+    y + 8
+  );
+
+  y += 22;
+
+  /* AVISO */
+
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(8);
+  doc.setTextColor(100, 116, 139);
+
+  agregarTextoPDF(
+    doc,
+    "Aviso: Este documento contiene precios estimados de demostración para un proyecto académico. No constituye una factura fiscal, CFDI, comprobante de pago ni reserva confirmada.",
+    margen,
+    y,
+    174,
+    5
+  );
+
+  /* DESCARGAR PDF */
+
+  doc.save(`ViajaMas_Factura_${folio}.pdf`);
+
+  return true;
+}
+
+/* =========================================
+   VALIDACIÓN DEL FORMULARIO Y FINALIZACIÓN
+========================================= */
 
 document.getElementById("formRegistro").addEventListener(
   "submit",
@@ -1703,10 +2073,14 @@ document.getElementById("formRegistro").addEventListener(
 
     event.preventDefault();
 
+    /* VALIDAR CAMPOS OBLIGATORIOS */
+
     if (!this.checkValidity()) {
       this.reportValidity();
       return;
     }
+
+    /* VALIDAR FECHAS */
 
     if (fechaRegreso.value < fechaInicio.value) {
 
@@ -1715,14 +2089,34 @@ document.getElementById("formRegistro").addEventListener(
       );
 
       fechaRegreso.focus();
-
       return;
     }
 
-    alert(
-      "¡Solicitud elaborada correctamente! " +
-      "Los datos del formulario están completos."
-    );
+    /*
+      ASIGNAR AGENTE ALEATORIAMENTE.
+
+      Cada vez que se termina una solicitud,
+      se selecciona uno de los tres agentes.
+    */
+
+    const agenteAsignado = agentesViaje[
+      Math.floor(
+        Math.random() * agentesViaje.length
+      )
+    ];
+
+    /* GENERAR FACTURA PDF */
+
+    const pdfGenerado =
+      generarFacturaPDF(agenteAsignado);
+
+    if (pdfGenerado) {
+
+      alert(
+        "¡Solicitud terminada! Se asignó un agente de viajes y tu factura simulada PDF se descargará automáticamente."
+      );
+
+    }
 
   }
 );
