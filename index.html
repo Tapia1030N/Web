@@ -389,6 +389,51 @@ footer {
   font-size: .9rem;
 }
 
+/* VISTAS PRINCIPAL Y REGISTRO */
+
+[hidden] {
+  display: none !important;
+}
+
+.registro-vista {
+  min-height: 100vh;
+  padding: 35px 7% 60px;
+  background: linear-gradient(135deg, #e7f7f7, #edf4ff);
+}
+
+.registro-encabezado {
+  max-width: 850px;
+  margin: 0 auto 25px;
+}
+
+.registro-encabezado .btn {
+  margin-bottom: 18px;
+}
+
+.registro-vista fieldset {
+  grid-column: 1 / -1;
+  border: 1px solid #dce6ed;
+  border-radius: 12px;
+  padding: 22px;
+  margin: 0;
+  min-width: 0;
+}
+
+.registro-vista legend {
+  padding: 0 8px;
+  color: var(--blue);
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+.registro-vista .registro-form {
+  grid-template-columns: 1fr 1fr;
+}
+
+.registro-vista .asientos-container {
+  margin-top: 0;
+}
+
 /* RESPONSIVE */
 
 @media(max-width:850px) {
@@ -443,12 +488,23 @@ footer {
   .registro-box {
     padding: 20px;
   }
+
+  .registro-vista .registro-form {
+    grid-template-columns: 1fr;
+  }
+
+  .registro-vista fieldset {
+    padding: 16px;
+  }
 }
 
 </style>
 </head>
 
 <body>
+
+<!-- PÁGINA PRINCIPAL -->
+<div id="paginaPrincipal">
 
 <header>
   <div class="logo">Viaja<span>Más</span> ✈</div>
@@ -458,7 +514,7 @@ footer {
     <a href="#servicios">Servicios</a>
     <a href="#consultas">Opciones</a>
     <a href="#presupuesto">Presupuesto</a>
-    <a href="#registro">Registro</a>
+    <a href="#registro" id="abrirRegistro">Registro</a>
     <a href="#nosotros">Equipo</a>
   </nav>
 </header>
@@ -485,6 +541,10 @@ footer {
 
     <a class="btn" href="#servicios">
       Explorar servicios
+    </a>
+
+    <a class="btn" id="abrirRegistroHero" href="#registro">
+      Registrarme
     </a>
   </div>
 
@@ -685,152 +745,6 @@ footer {
   </div>
 </section>
 
-<!-- REGISTRO -->
-
-<section class="registro" id="registro">
-
-  <div class="section-title">
-    <h2>Registro de viaje</h2>
-    <p>
-      Completa el siguiente formulario con los datos
-      de tu viaje y selecciona las preferencias
-      de vuelo para cada viajero.
-    </p>
-  </div>
-
-  <div class="registro-box">
-
-    <form class="registro-form" id="formRegistro">
-
-      <!-- NOMBRE -->
-
-      <div class="form-group full-width">
-        <label for="nombre">Nombre completo</label>
-
-        <input
-          type="text"
-          id="nombre"
-          name="nombre"
-          placeholder="Escribe tu nombre completo"
-          autocomplete="name"
-          required
-        >
-      </div>
-
-      <!-- NUMERO DE VIAJEROS -->
-
-      <div class="form-group">
-        <label for="viajeros">Número de viajeros</label>
-
-        <input
-          type="number"
-          id="viajeros"
-          name="viajeros"
-          min="1"
-          step="1"
-          placeholder="Ej. 2"
-          required
-        >
-      </div>
-
-      <!-- ORIGEN -->
-
-      <div class="form-group">
-        <label for="origen">Origen</label>
-
-        <input
-          type="text"
-          id="origen"
-          name="origen"
-          placeholder="Ciudad de salida"
-          required
-        >
-      </div>
-
-      <!-- DESTINO -->
-
-      <div class="form-group full-width">
-        <label for="destino">Destino</label>
-
-        <input
-          type="text"
-          id="destino"
-          name="destino"
-          placeholder="¿A dónde deseas viajar?"
-          required
-        >
-      </div>
-
-      <!-- CLASE DE VUELO -->
-
-      <div class="form-group clase-vuelo">
-
-        <label for="claseVuelo">
-          Clase de vuelo
-        </label>
-
-        <select
-          id="claseVuelo"
-          name="claseVuelo"
-          required
-        >
-          <option value="" disabled selected>
-            Selecciona una clase de vuelo
-          </option>
-
-          <option value="Clase económica">
-            Clase económica
-          </option>
-
-          <option value="Clase ejecutiva">
-            Clase ejecutiva
-          </option>
-
-          <option value="Primera clase">
-            Primera clase
-          </option>
-
-        </select>
-
-      </div>
-
-      <!-- ELECCION DE ASIENTOS -->
-
-      <div class="asientos-container">
-
-        <h3>Elección de asiento</h3>
-
-        <p>
-          Selecciona el tipo de asiento que prefiera
-          cada viajero.
-        </p>
-
-        <div
-          class="asientos-lista"
-          id="asientosLista"
-        >
-
-          <p>
-            Primero indica el número de viajeros
-            para mostrar las opciones de asiento.
-          </p>
-
-        </div>
-
-      </div>
-
-      <!-- BOTON -->
-
-      <button class="btn" type="submit">
-        Enviar registro
-      </button>
-
-    </form>
-
-  </div>
-
-</section>
-
 <!-- EQUIPO -->
 
 <section class="about" id="nosotros">
@@ -870,9 +784,227 @@ footer {
   © 2026 ViajaMás · Proyecto académico de Ingeniería de Software · Equipo 7
 </footer>
 
-<!-- JAVASCRIPT: ASIENTOS DINÁMICOS -->
+</div>
+
+<!-- VISTA INDEPENDIENTE DE REGISTRO -->
+
+<section class="registro-vista" id="paginaRegistro" hidden>
+
+  <div class="registro-encabezado">
+
+    <div class="logo">Viaja<span>Más</span> ✈</div>
+
+    <a class="btn" href="#inicio" id="volverInicio">
+      ← Volver al inicio
+    </a>
+
+    <div class="section-title">
+      <h2>Registro de viaje</h2>
+      <p>
+        Completa tus datos y selecciona las preferencias
+        de vuelo para cada viajero.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="registro-box">
+
+    <form class="registro-form" id="formRegistro">
+
+      <!-- SECCIÓN 1: DATOS PERSONALES Y DEL VIAJE -->
+
+      <fieldset>
+
+        <legend>1. Datos personales y del viaje</legend>
+
+        <div class="registro-form">
+
+          <div class="form-group full-width">
+            <label for="nombre">Nombre completo</label>
+
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              placeholder="Escribe tu nombre completo"
+              autocomplete="name"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="viajeros">Número de viajeros</label>
+
+            <input
+              type="number"
+              id="viajeros"
+              name="viajeros"
+              min="1"
+              step="1"
+              placeholder="Ej. 2"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="origen">Origen</label>
+
+            <input
+              type="text"
+              id="origen"
+              name="origen"
+              placeholder="Ciudad de salida"
+              required
+            >
+          </div>
+
+          <div class="form-group full-width">
+            <label for="destino">Destino</label>
+
+            <input
+              type="text"
+              id="destino"
+              name="destino"
+              placeholder="¿A dónde deseas viajar?"
+              required
+            >
+          </div>
+
+        </div>
+
+      </fieldset>
+
+      <!-- SECCIÓN 2: VUELOS -->
+
+      <fieldset>
+
+        <legend>2. Vuelos</legend>
+
+        <div class="registro-form">
+
+          <div class="form-group clase-vuelo">
+
+            <label for="claseVuelo">
+              Clase de vuelo
+            </label>
+
+            <select
+              id="claseVuelo"
+              name="claseVuelo"
+              required
+            >
+
+              <option value="" disabled selected>
+                Selecciona una clase de vuelo
+              </option>
+
+              <option value="Clase económica">
+                Clase económica
+              </option>
+
+              <option value="Clase ejecutiva">
+                Clase ejecutiva
+              </option>
+
+              <option value="Primera clase">
+                Primera clase
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="asientos-container">
+
+            <h3>Elección de asiento</h3>
+
+            <p>
+              Selecciona el tipo de asiento que prefiera
+              cada viajero.
+            </p>
+
+            <div
+              class="asientos-lista"
+              id="asientosLista"
+            >
+
+              <p>
+                Primero indica el número de viajeros
+                para mostrar las opciones de asiento.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </fieldset>
+
+      <!-- BOTÓN DE ENVÍO -->
+
+      <button class="btn" type="submit">
+        Enviar registro
+      </button>
+
+    </form>
+
+  </div>
+
+</section>
+
+<!-- JAVASCRIPT -->
 
 <script>
+
+// REFERENCIAS A LAS DOS VISTAS
+
+const paginaPrincipal = document.getElementById("paginaPrincipal");
+const paginaRegistro = document.getElementById("paginaRegistro");
+
+const abrirRegistro = document.getElementById("abrirRegistro");
+const abrirRegistroHero = document.getElementById("abrirRegistroHero");
+const volverInicio = document.getElementById("volverInicio");
+
+// MOSTRAR EL APARTADO DE REGISTRO
+
+function mostrarRegistro(event) {
+
+  if (event) {
+    event.preventDefault();
+  }
+
+  paginaPrincipal.hidden = true;
+  paginaRegistro.hidden = false;
+
+  window.scrollTo(0, 0);
+}
+
+// REGRESAR A LA PÁGINA PRINCIPAL
+
+function mostrarInicio(event) {
+
+  if (event) {
+    event.preventDefault();
+  }
+
+  paginaRegistro.hidden = true;
+  paginaPrincipal.hidden = false;
+
+  window.scrollTo(0, 0);
+}
+
+// EVENTOS DE LOS BOTONES
+
+abrirRegistro.addEventListener("click", mostrarRegistro);
+
+abrirRegistroHero.addEventListener("click", mostrarRegistro);
+
+volverInicio.addEventListener("click", mostrarInicio);
+
+
+// GENERACIÓN DINÁMICA DE ASIENTOS
 
 const cantidadViajeros = document.getElementById("viajeros");
 
@@ -882,22 +1014,22 @@ const asientosLista = document.getElementById("asientosLista");
 
 function generarAsientos() {
 
-  const cantidad = parseInt(cantidadViajeros.value);
+  const cantidad = Number(cantidadViajeros.value);
 
   // Limpiar los selectores anteriores
 
   asientosLista.innerHTML = "";
 
-  // Si no existe una cantidad válida, mostrar mensaje
+  // Verificar que exista una cantidad válida
 
   if (!Number.isInteger(cantidad) || cantidad < 1) {
 
-    asientosLista.innerHTML = `
-      <p>
-        Primero indica el número de viajeros
-        para mostrar las opciones de asiento.
-      </p>
-    `;
+    const mensaje = document.createElement("p");
+
+    mensaje.textContent =
+      "Primero indica el número de viajeros para mostrar las opciones de asiento.";
+
+    asientosLista.appendChild(mensaje);
 
     return;
   }
@@ -910,33 +1042,64 @@ function generarAsientos() {
 
     grupo.className = "asiento-viajero";
 
-    grupo.innerHTML = `
+    // Etiqueta del viajero
 
-      <label for="asiento${i}">
-        Viajero ${i} - Elección de asiento
-      </label>
+    const etiqueta = document.createElement("label");
 
-      <select
-        id="asiento${i}"
-        name="asientos[]"
-        required
-      >
+    etiqueta.htmlFor = "asiento" + i;
 
-        <option value="" disabled selected>
-          Selecciona tu asiento
-        </option>
+    etiqueta.textContent =
+      "Viajero " + i + " - Elección de asiento";
 
-        <option value="Ventanilla">
-          Ventanilla
-        </option>
+    // Selector de asiento
 
-        <option value="Pasillo">
-          Pasillo
-        </option>
+    const selector = document.createElement("select");
 
-      </select>
+    selector.id = "asiento" + i;
 
-    `;
+    selector.name = "asientos[]";
+
+    selector.required = true;
+
+    // Opción inicial
+
+    const indicacion = document.createElement("option");
+
+    indicacion.value = "";
+
+    indicacion.disabled = true;
+
+    indicacion.selected = true;
+
+    indicacion.textContent = "Selecciona tu asiento";
+
+    // Opción ventanilla
+
+    const ventanilla = document.createElement("option");
+
+    ventanilla.value = "Ventanilla";
+
+    ventanilla.textContent = "Ventanilla";
+
+    // Opción pasillo
+
+    const pasillo = document.createElement("option");
+
+    pasillo.value = "Pasillo";
+
+    pasillo.textContent = "Pasillo";
+
+    // Agregar opciones al selector
+
+    selector.append(
+      indicacion,
+      ventanilla,
+      pasillo
+    );
+
+    // Agregar elementos al contenedor
+
+    grupo.append(etiqueta, selector);
 
     asientosLista.appendChild(grupo);
 
@@ -944,27 +1107,18 @@ function generarAsientos() {
 
 }
 
-// Actualizar los asientos cuando cambia el número de viajeros
+// ACTUALIZAR ASIENTOS CUANDO CAMBIE EL NÚMERO DE VIAJEROS
 
 cantidadViajeros.addEventListener(
   "input",
   generarAsientos
 );
 
-// Evitar números menores a uno al perder el foco
-
 cantidadViajeros.addEventListener(
   "change",
-  function() {
-
-    if (this.value !== "" && Number(this.value) < 1) {
-      this.value = 1;
-    }
-
-    generarAsientos();
-
-  }
+  generarAsientos
 );
+
 
 // VALIDACIÓN DEL FORMULARIO
 
@@ -972,15 +1126,22 @@ document.getElementById("formRegistro").addEventListener(
   "submit",
   function(event) {
 
+    // Evitar que la página se recargue
+
+    event.preventDefault();
+
+    // Comprobar que todos los campos sean válidos
+
     if (!this.checkValidity()) {
-      event.preventDefault();
+
       this.reportValidity();
+
       return;
     }
 
     alert(
-      "¡Registro completado correctamente! " +
-      "Los datos están listos para enviarse."
+      "El formulario se completó correctamente. " +
+      "En esta versión de demostración, los datos aún no se guardan ni se envían a un servidor."
     );
 
   }
