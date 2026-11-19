@@ -422,6 +422,77 @@ section {
   margin-top: 12px;
 }
 
+/* COTIZACIÓN PREVIA */
+
+.cotizacion-box {
+  padding: 25px;
+  background: linear-gradient(135deg, #e7f7f7, #edf4ff);
+  border: 1px solid #c8e9e6;
+  border-radius: 14px;
+}
+
+.cotizacion-box h2 {
+  margin-top: 0;
+  color: var(--blue);
+}
+
+.cotizacion-descripcion {
+  color: #627d98;
+  line-height: 1.6;
+}
+
+.cotizacion-conceptos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.cotizacion-fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #dce6ed;
+}
+
+.cotizacion-fila span:first-child {
+  color: #486581;
+}
+
+.cotizacion-fila strong {
+  text-align: right;
+}
+
+.cotizacion-totales {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 2px solid #cbd5e1;
+}
+
+.cotizacion-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+  padding: 18px;
+  background: white;
+  border-radius: 10px;
+}
+
+.cotizacion-total strong {
+  color: #087c73;
+  font-size: 1.5rem;
+}
+
+.cotizacion-aviso {
+  margin-top: 15px;
+  color: #627d98;
+  font-size: .85rem;
+  line-height: 1.5;
+}
+
 .about {
   background: var(--navy);
   color: white;
@@ -504,6 +575,15 @@ footer {
   .botones-registro .btn {
     width: 100%;
     text-align: center;
+  }
+
+  .cotizacion-fila,
+  .cotizacion-total {
+    align-items: flex-start;
+  }
+
+  .cotizacion-total {
+    flex-direction: column;
   }
 }
 </style>
@@ -1176,6 +1256,69 @@ footer {
         </div>
       </fieldset>
 
+      <!-- COTIZACIÓN PREVIA -->
+
+      <div class="cotizacion-box" id="cotizacion">
+        <h2>💰 Cotización estimada de tu viaje</h2>
+
+        <p class="cotizacion-descripcion">
+          Aquí puedes consultar el costo aproximado de tu viaje.
+          Los importes se actualizarán automáticamente conforme
+          selecciones tus preferencias.
+        </p>
+
+        <div class="cotizacion-conceptos">
+
+          <div class="cotizacion-fila">
+            <span>Vuelos</span>
+            <strong id="cotizacionVuelos">$0.00</strong>
+          </div>
+
+          <div class="cotizacion-fila">
+            <span>Hospedaje</span>
+            <strong id="cotizacionHospedaje">$0.00</strong>
+          </div>
+
+          <div class="cotizacion-fila">
+            <span>Servicios extra</span>
+            <strong id="cotizacionServicios">$0.00</strong>
+          </div>
+
+          <div class="cotizacion-fila">
+            <span>Atracciones</span>
+            <strong id="cotizacionAtracciones">$0.00</strong>
+          </div>
+
+        </div>
+
+        <div class="cotizacion-totales">
+
+          <div class="cotizacion-fila">
+            <span>Subtotal</span>
+            <strong id="cotizacionSubtotal">$0.00</strong>
+          </div>
+
+          <div class="cotizacion-fila">
+            <span>IVA (16%)</span>
+            <strong id="cotizacionIVA">$0.00</strong>
+          </div>
+
+          <div class="cotizacion-total">
+            <span><strong>Total estimado</strong></span>
+            <strong id="cotizacionTotal">$0.00</strong>
+          </div>
+
+        </div>
+
+        <p class="cotizacion-aviso">
+          Esta cotización es una estimación académica basada en
+          tarifas de demostración. No representa una reserva
+          confirmada ni un precio comercial definitivo.
+        </p>
+      </div>
+
+      <!-- BOTONES -->
+
       <div class="botones-registro">
         <button
           class="btn btn-secundario"
@@ -1260,7 +1403,6 @@ function generarNumeroCliente() {
 
   const clientes = obtenerClientes();
 
-  // Evita repetir números que ya existan en los registros.
   let numeroCliente;
 
   do {
@@ -1275,6 +1417,7 @@ function generarNumeroCliente() {
 
 function guardarDatosCliente(numeroCliente) {
   const clientes = obtenerClientes();
+  const registroAnterior = clientes[numeroCliente];
 
   const registro = {
     numeroCliente: numeroCliente,
@@ -1285,7 +1428,9 @@ function guardarDatosCliente(numeroCliente) {
     correo: obtenerValor("correo"),
     celular: obtenerValor("celular"),
     nacionalidad: obtenerValor("nacionalidad"),
-    fechaRegistro: new Date().toISOString(),
+    fechaRegistro: registroAnterior
+      ? registroAnterior.fechaRegistro
+      : new Date().toISOString(),
     ultimaActualizacion: new Date().toISOString()
   };
 
@@ -1350,6 +1495,8 @@ function actualizarTipoCliente() {
     numeroClienteInput.value = "";
     limpiarDatosTitular();
   }
+
+  actualizarCotizacion();
 }
 
 esClienteSelect.addEventListener("change", actualizarTipoCliente);
@@ -1385,7 +1532,6 @@ function buscarCliente() {
   clienteActual = cliente;
   clienteEncontrado = true;
 
-  // Recuperar datos personales del titular.
   document.getElementById("nombre").value = cliente.nombre || "";
   document.getElementById("edad").value = cliente.edad || "";
   document.getElementById("rfc").value = cliente.rfc || "";
@@ -1402,9 +1548,10 @@ function buscarCliente() {
     "Bienvenido nuevamente, " + cliente.nombre +
     ". Tu número de cliente es " + cliente.numeroCliente +
     ". Tus datos personales se han recuperado.";
+
   mensajeClienteEncontrado.hidden = false;
 
-  // El pasaporte no se guarda en el almacenamiento local.
+  // El pasaporte no se guarda en localStorage.
   document.getElementById("titularTienePasaporte").value = "";
   document.getElementById("pasaporte").value = "";
   document.getElementById("campoPasaporteTitular").hidden = true;
@@ -1669,6 +1816,7 @@ function actualizarViajeros() {
   ) {
     generarAcompanantes(0);
     generarAsientos(0);
+    actualizarCotizacion();
     return;
   }
 
@@ -1680,11 +1828,14 @@ function actualizarViajeros() {
     mensaje.textContent =
       "Para este formulario, el máximo permitido es de 20 viajeros.";
     asientosLista.appendChild(mensaje);
+
+    actualizarCotizacion();
     return;
   }
 
   generarAcompanantes(cantidad);
   generarAsientos(cantidad);
+  actualizarCotizacion();
 }
 
 cantidadViajeros.addEventListener("change", function() {
@@ -1694,6 +1845,8 @@ cantidadViajeros.addEventListener("change", function() {
 
   actualizarViajeros();
 });
+
+cantidadViajeros.addEventListener("input", actualizarCotizacion);
 
 /* VALIDACIÓN DE FECHAS */
 
@@ -1708,7 +1861,7 @@ fechaInicio.addEventListener("change", function() {
   }
 });
 
-/* FUNCIONES DE FACTURA */
+/* TARIFAS Y FUNCIONES DE FACTURA */
 
 const agentesViaje = [
   "Jose de Jesus Tapia Aguilar",
@@ -1759,6 +1912,102 @@ function formatoMoneda(cantidad) {
   }).format(cantidad);
 }
 
+/* CÁLCULO DE COSTOS COMPARTIDO */
+
+function calcularCostosViaje() {
+  const cantidad = Number(obtenerValor("viajeros")) || 0;
+  const noches = Number(obtenerValor("numeroNoches")) || 0;
+
+  const clase = obtenerValor("claseVuelo");
+  const hospedaje = obtenerValor("tipoHospedaje");
+  const servicios = obtenerValor("serviciosExtra");
+  const atraccion = obtenerValor("tipoAtraccion");
+
+  const costoVuelo =
+    (tarifasDemo.vuelo[clase] || 0) * cantidad;
+
+  const costoHospedaje =
+    (tarifasDemo.hospedaje[hospedaje] || 0) *
+    noches *
+    cantidad;
+
+  const costoServicios =
+    (tarifasDemo.alimentos[servicios] || 0) *
+    noches *
+    cantidad;
+
+  const costoAtracciones =
+    (tarifasDemo.atracciones[atraccion] || 0) *
+    cantidad;
+
+  const subtotal =
+    costoVuelo +
+    costoHospedaje +
+    costoServicios +
+    costoAtracciones;
+
+  const iva = subtotal * tarifasDemo.iva;
+  const total = subtotal + iva;
+
+  return {
+    costoVuelo,
+    costoHospedaje,
+    costoServicios,
+    costoAtracciones,
+    subtotal,
+    iva,
+    total
+  };
+}
+
+/* ACTUALIZAR COTIZACIÓN EN PANTALLA */
+
+function actualizarCotizacion() {
+  const costos = calcularCostosViaje();
+
+  document.getElementById("cotizacionVuelos").textContent =
+    formatoMoneda(costos.costoVuelo);
+
+  document.getElementById("cotizacionHospedaje").textContent =
+    formatoMoneda(costos.costoHospedaje);
+
+  document.getElementById("cotizacionServicios").textContent =
+    formatoMoneda(costos.costoServicios);
+
+  document.getElementById("cotizacionAtracciones").textContent =
+    formatoMoneda(costos.costoAtracciones);
+
+  document.getElementById("cotizacionSubtotal").textContent =
+    formatoMoneda(costos.subtotal);
+
+  document.getElementById("cotizacionIVA").textContent =
+    formatoMoneda(costos.iva);
+
+  document.getElementById("cotizacionTotal").textContent =
+    formatoMoneda(costos.total);
+}
+
+/* EVENTOS DE ACTUALIZACIÓN DE LA COTIZACIÓN */
+
+const camposCotizacion = [
+  "viajeros",
+  "claseVuelo",
+  "tipoHospedaje",
+  "numeroNoches",
+  "serviciosExtra",
+  "tipoAtraccion"
+];
+
+camposCotizacion.forEach(id => {
+  const campo = document.getElementById(id);
+
+  campo.addEventListener("input", actualizarCotizacion);
+  campo.addEventListener("change", actualizarCotizacion);
+});
+
+// Mostrar una cotización inicial.
+actualizarCotizacion();
+
 function agregarTextoPDF(doc, texto, x, y, anchoMaximo = 175, salto = 7) {
   const lineas = doc.splitTextToSize(String(texto || "-"), anchoMaximo);
 
@@ -1775,6 +2024,8 @@ function agregarTextoPDF(doc, texto, x, y, anchoMaximo = 175, salto = 7) {
   return y;
 }
 
+/* GENERAR FACTURA PDF */
+
 function generarFacturaPDF(agente, numeroCliente) {
   if (!window.jspdf || !window.jspdf.jsPDF) {
     alert("No se pudo cargar la biblioteca jsPDF. Verifica que el archivo jspdf.umd.min.js esté en la misma carpeta que ViajaMas.html y que el nombre del archivo sea exactamente igual.");
@@ -1789,17 +2040,13 @@ function generarFacturaPDF(agente, numeroCliente) {
   const servicios = obtenerValor("serviciosExtra");
   const atraccion = obtenerValor("tipoAtraccion");
 
-  const costoVuelo =
-    (tarifasDemo.vuelo[clase] || 0) * cantidad;
+  // Utilizar los mismos cálculos que aparecen en la cotización.
+  const costos = calcularCostosViaje();
 
-  const costoHospedaje =
-    (tarifasDemo.hospedaje[hospedaje] || 0) * noches * cantidad;
-
-  const costoServicios =
-    (tarifasDemo.alimentos[servicios] || 0) * noches * cantidad;
-
-  const costoAtracciones =
-    (tarifasDemo.atracciones[atraccion] || 0) * cantidad;
+  const costoVuelo = costos.costoVuelo;
+  const costoHospedaje = costos.costoHospedaje;
+  const costoServicios = costos.costoServicios;
+  const costoAtracciones = costos.costoAtracciones;
 
   const conceptos = [
     {
@@ -1824,13 +2071,9 @@ function generarFacturaPDF(agente, numeroCliente) {
     }
   ].filter(concepto => concepto.total > 0);
 
-  const subtotal = conceptos.reduce(
-    (suma, concepto) => suma + concepto.total,
-    0
-  );
-
-  const iva = subtotal * tarifasDemo.iva;
-  const total = subtotal + iva;
+  const subtotal = costos.subtotal;
+  const iva = costos.iva;
+  const total = costos.total;
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: "mm", format: "a4" });
@@ -1886,7 +2129,6 @@ function generarFacturaPDF(agente, numeroCliente) {
 
   y += 10;
 
-  // Identificación del cliente.
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.text("IDENTIFICACIÓN DEL CLIENTE", margen, y);
@@ -2171,7 +2413,6 @@ document.getElementById("formRegistro").addEventListener(
       return;
     }
 
-    // Comprobar la biblioteca antes de guardar o generar el número.
     if (!window.jspdf || !window.jspdf.jsPDF) {
       alert("No se pudo cargar la biblioteca jsPDF. Verifica que jspdf.umd.min.js esté en la misma carpeta que ViajaMas.html.");
       return;
@@ -2180,10 +2421,8 @@ document.getElementById("formRegistro").addEventListener(
     let numeroCliente;
 
     if (esClienteSelect.value === "si") {
-      // El cliente conserva su número anterior.
       numeroCliente = clienteActual.numeroCliente;
     } else {
-      // Se genera un número nuevo para el cliente nuevo.
       numeroCliente = generarNumeroCliente();
     }
 
@@ -2216,6 +2455,9 @@ document.getElementById("formRegistro").addEventListener(
         clienteEncontrado = false;
 
         campoNumeroCliente.hidden = true;
+        numeroClienteInput.required = false;
+        numeroClienteInput.value = "";
+
         mensajeClienteNuevo.hidden = true;
         mensajeClienteEncontrado.hidden = true;
         mensajeBusquedaCliente.textContent = "";
@@ -2227,6 +2469,9 @@ document.getElementById("formRegistro").addEventListener(
 
         generarAcompanantes(0);
         generarAsientos(0);
+
+        // Restablecer la cotización después de limpiar el formulario.
+        actualizarCotizacion();
 
         mostrarInicio();
       }
@@ -2241,11 +2486,6 @@ document.getElementById("formRegistro").addEventListener(
     }
   }
 );
-
-</script>
-
-</body>
-</html>
 
 </script>
 
