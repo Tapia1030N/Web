@@ -334,6 +334,28 @@ section {
   line-height: 1.4;
 }
 
+/* ACOMPAÑANTES */
+
+.acompanantes-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.acompanante-card {
+  padding: 20px;
+  background: #f4f8fb;
+  border: 1px solid #dce6ed;
+  border-radius: 12px;
+}
+
+.acompanante-card legend {
+  color: var(--blue);
+  font-weight: bold;
+  padding: 0 10px;
+}
+
 /* ASIENTOS */
 
 .asientos-container {
@@ -376,7 +398,7 @@ section {
   font: inherit;
 }
 
-/* BOTONES DEL REGISTRO */
+/* BOTONES */
 
 .botones-registro {
   display: flex;
@@ -511,8 +533,6 @@ footer {
 
 <main>
 
-<!-- INICIO -->
-
 <section class="hero" id="inicio">
   <div>
     <span class="tag">Tu próxima aventura comienza aquí</span>
@@ -540,7 +560,6 @@ footer {
 <!-- SERVICIOS -->
 
 <section id="servicios">
-
   <div class="section-title">
     <h2>Planea tu viaje ideal</h2>
     <p>
@@ -550,7 +569,6 @@ footer {
   </div>
 
   <div class="cards">
-
     <article class="card">
       <div class="emoji">✈️</div>
       <h3>Vuelos</h3>
@@ -579,14 +597,12 @@ footer {
         y precios de entrada.
       </p>
     </article>
-
   </div>
 </section>
 
 <!-- CONSULTAS -->
 
 <section class="consultas" id="consultas">
-
   <div class="section-title">
     <h2>Opciones para tu viaje</h2>
     <p>
@@ -596,7 +612,6 @@ footer {
   </div>
 
   <div class="consulta-grid">
-
     <article class="consulta">
       <h3>✈️ Consulta de vuelos</h3>
       <p>Se consideran los siguientes datos:</p>
@@ -632,14 +647,12 @@ footer {
         <li>Precio de entrada.</li>
       </ul>
     </article>
-
   </div>
 </section>
 
 <!-- PRESUPUESTO -->
 
 <section class="presupuesto" id="presupuesto">
-
   <div class="section-title">
     <h2>Comparación y presupuesto</h2>
     <p>
@@ -651,7 +664,6 @@ footer {
 
   <div class="presupuesto-box">
     <h3>Elementos considerados en la cotización</h3>
-
     <ul>
       <li><strong>Vuelos:</strong> tarifas de las opciones seleccionadas.</li>
       <li><strong>Hospedaje:</strong> costo por noche y duración de la estancia.</li>
@@ -665,13 +677,11 @@ footer {
       toma de decisiones.
     </p>
   </div>
-
 </section>
 
 <!-- FUNCIONAMIENTO -->
 
 <section id="funcionamiento">
-
   <div class="section-title">
     <h2>¿Cómo funciona nuestro sistema?</h2>
     <p>
@@ -681,7 +691,6 @@ footer {
   </div>
 
   <div class="pasos">
-
     <article class="paso">
       <span class="numero">1</span>
       <h3>Solicitud</h3>
@@ -726,14 +735,12 @@ footer {
         de su preferencia.
       </p>
     </article>
-
   </div>
 </section>
 
 <!-- EQUIPO -->
 
 <section class="about" id="nosotros">
-
   <h2>Acerca de ViajaMás</h2>
 
   <p>
@@ -746,7 +753,6 @@ footer {
   </p>
 
   <div class="equipo">
-
     <p>
       <strong>
         Proyecto de Ingeniería de Software · Equipo 7
@@ -758,9 +764,7 @@ footer {
       <li>Tapia Aguilar José de Jesús</li>
       <li>Vilchis Cruz Edgar Leonardo</li>
     </ul>
-
   </div>
-
 </section>
 
 </main>
@@ -779,7 +783,12 @@ footer {
 
 <header>
   <div class="logo">Viaja<span>Más</span> ✈</div>
-  <button class="btn btn-secundario" type="button" onclick="mostrarInicio()">
+
+  <button
+    class="btn btn-secundario"
+    type="button"
+    onclick="mostrarInicio()"
+  >
     Volver al inicio
   </button>
 </header>
@@ -798,10 +807,10 @@ footer {
 
     <form class="registro-form" id="formRegistro">
 
-      <!-- DATOS PERSONALES Y DEL VIAJE -->
+      <!-- DATOS DEL TITULAR Y DEL VIAJE -->
 
       <fieldset class="seccion-registro">
-        <legend>Datos personales y del viaje</legend>
+        <legend>Datos personales y del viaje (titular)</legend>
 
         <div class="campos-grid">
 
@@ -889,7 +898,30 @@ footer {
           </div>
 
           <div class="form-group">
-            <label for="pasaporte">Número de pasaporte (si cuentas con él):</label>
+            <label for="tienePasaporteTitular">
+              ¿Cuentas con número de pasaporte?
+            </label>
+
+            <select
+              id="tienePasaporteTitular"
+              name="tienePasaporte"
+              required
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+
+          <div
+            class="form-group"
+            id="campoPasaporteTitular"
+            hidden
+          >
+            <label for="pasaporte">
+              Número de pasaporte:
+            </label>
+
             <input
               type="text"
               id="pasaporte"
@@ -905,10 +937,15 @@ footer {
               id="viajeros"
               name="viajeros"
               min="1"
+              max="20"
               step="1"
               placeholder="Ej. 2"
               required
             >
+            <small>
+              El primer viajero será el titular de la reservación.
+              Máximo 20 viajeros.
+            </small>
           </div>
 
           <div class="form-group">
@@ -954,6 +991,15 @@ footer {
           </div>
 
         </div>
+
+        <!-- AQUÍ SE GENERAN LOS FORMULARIOS DE ACOMPAÑANTES -->
+
+        <div
+          id="acompanantesContainer"
+          class="acompanantes-container"
+          aria-live="polite"
+        ></div>
+
       </fieldset>
 
       <!-- VUELOS -->
@@ -965,6 +1011,7 @@ footer {
 
           <div class="form-group">
             <label for="claseVuelo">Clase de vuelo:</label>
+
             <select id="claseVuelo" name="claseVuelo" required>
               <option value="">Selecciona una clase</option>
               <option value="Clase económica">Clase económica</option>
@@ -977,15 +1024,27 @@ footer {
             <label for="aerolineaEspecifica">
               ¿Deseas alguna aerolínea en específico?
             </label>
-            <select id="aerolineaEspecifica" name="aerolineaEspecifica" required>
+
+            <select
+              id="aerolineaEspecifica"
+              name="aerolineaEspecifica"
+              required
+            >
               <option value="">Selecciona una opción</option>
               <option value="si">Sí</option>
               <option value="no">No</option>
             </select>
           </div>
 
-          <div class="form-group full-width" id="campoNombreAerolinea" hidden>
-            <label for="nombreAerolinea">Nombre de la aerolínea:</label>
+          <div
+            class="form-group full-width"
+            id="campoNombreAerolinea"
+            hidden
+          >
+            <label for="nombreAerolinea">
+              Nombre de la aerolínea:
+            </label>
+
             <input
               type="text"
               id="nombreAerolinea"
@@ -1023,6 +1082,7 @@ footer {
 
           <div class="form-group">
             <label for="tipoHospedaje">Tipo de hospedaje:</label>
+
             <select id="tipoHospedaje" name="tipoHospedaje" required>
               <option value="">Selecciona una opción</option>
               <option value="Hotel">Hotel</option>
@@ -1033,6 +1093,7 @@ footer {
 
           <div class="form-group">
             <label for="numeroNoches">Número de noches:</label>
+
             <input
               type="number"
               id="numeroNoches"
@@ -1046,6 +1107,7 @@ footer {
 
           <div class="form-group full-width">
             <label for="serviciosExtra">Servicios extra:</label>
+
             <select id="serviciosExtra" name="serviciosExtra" required>
               <option value="">Selecciona una opción</option>
               <option value="Desayuno incluido">Desayuno incluido</option>
@@ -1059,15 +1121,27 @@ footer {
             <label for="hospedajeEspecifico">
               ¿Deseas algún hospedaje en específico?
             </label>
-            <select id="hospedajeEspecifico" name="hospedajeEspecifico" required>
+
+            <select
+              id="hospedajeEspecifico"
+              name="hospedajeEspecifico"
+              required
+            >
               <option value="">Selecciona una opción</option>
               <option value="si">Sí</option>
               <option value="no">No</option>
             </select>
           </div>
 
-          <div class="form-group full-width" id="campoNombreHospedaje" hidden>
-            <label for="nombreHospedaje">Nombre del hospedaje:</label>
+          <div
+            class="form-group full-width"
+            id="campoNombreHospedaje"
+            hidden
+          >
+            <label for="nombreHospedaje">
+              Nombre del hospedaje:
+            </label>
+
             <input
               type="text"
               id="nombreHospedaje"
@@ -1088,17 +1162,22 @@ footer {
 
           <div class="form-group full-width">
             <label for="tipoAtraccion">Tipo de atracción:</label>
+
             <select id="tipoAtraccion" name="tipoAtraccion" required>
               <option value="">Selecciona una opción</option>
+
               <option value="Naturales">
                 Naturales (playas, montañas, etc.)
               </option>
+
               <option value="Culturales o históricos">
                 Culturales o históricos (museos, monumentos, etc.)
               </option>
+
               <option value="Recreativos y de entretenimiento">
                 Recreativos y de entretenimiento (obras de teatro, eventos, etc.)
               </option>
+
               <option value="Ninguna">Ninguna</option>
             </select>
           </div>
@@ -1107,15 +1186,27 @@ footer {
             <label for="atraccionEspecifica">
               ¿Deseas alguna atracción en específico?
             </label>
-            <select id="atraccionEspecifica" name="atraccionEspecifica" required>
+
+            <select
+              id="atraccionEspecifica"
+              name="atraccionEspecifica"
+              required
+            >
               <option value="">Selecciona una opción</option>
               <option value="si">Sí</option>
               <option value="no">No</option>
             </select>
           </div>
 
-          <div class="form-group full-width" id="campoNombreAtraccion" hidden>
-            <label for="nombreAtraccion">Nombre de la atracción:</label>
+          <div
+            class="form-group full-width"
+            id="campoNombreAtraccion"
+            hidden
+          >
+            <label for="nombreAtraccion">
+              Nombre de la atracción:
+            </label>
+
             <input
               type="text"
               id="nombreAtraccion"
@@ -1130,6 +1221,7 @@ footer {
       <!-- BOTONES -->
 
       <div class="botones-registro">
+
         <button
           class="btn btn-secundario"
           type="button"
@@ -1141,6 +1233,7 @@ footer {
         <button class="btn" type="submit">
           Elaborar solicitud
         </button>
+
       </div>
 
     </form>
@@ -1183,14 +1276,16 @@ function mostrarInicio() {
   window.scrollTo(0, 0);
 }
 
-/* PREGUNTAS CONDICIONALES */
+/* PREGUNTAS CONDICIONALES GENERALES */
 
 function configurarPreguntaCondicional(idSelect, idCampo, idInput) {
+
   const select = document.getElementById(idSelect);
   const campo = document.getElementById(idCampo);
   const input = document.getElementById(idInput);
 
   function actualizarCampo() {
+
     const mostrar = select.value === "si";
 
     campo.hidden = !mostrar;
@@ -1199,12 +1294,21 @@ function configurarPreguntaCondicional(idSelect, idCampo, idInput) {
     if (!mostrar) {
       input.value = "";
     }
+
   }
 
   select.addEventListener("change", actualizarCampo);
 
   actualizarCampo();
 }
+
+/* PASAPORTE DEL TITULAR */
+
+configurarPreguntaCondicional(
+  "tienePasaporteTitular",
+  "campoPasaporteTitular",
+  "pasaporte"
+);
 
 /* AEROLÍNEA */
 
@@ -1230,59 +1334,247 @@ configurarPreguntaCondicional(
   "nombreAtraccion"
 );
 
-/* GENERAR UN SELECTOR DE ASIENTO POR VIAJERO */
+/* ELEMENTOS DE VIAJEROS */
 
 const cantidadViajeros = document.getElementById("viajeros");
 const asientosLista = document.getElementById("asientosLista");
+const acompanantesContainer = document.getElementById("acompanantesContainer");
 
-function generarAsientos() {
-  const cantidad = parseInt(cantidadViajeros.value, 10);
+/* GENERAR LOS FORMULARIOS DE ACOMPAÑANTES */
+
+function generarAcompanantes(cantidad) {
+
+  acompanantesContainer.innerHTML = "";
+
+  if (
+    !Number.isInteger(cantidad) ||
+    cantidad < 1 ||
+    cantidad > 20
+  ) {
+    return;
+  }
+
+  /*
+    El viajero 1 es el titular.
+    Los formularios adicionales empiezan en el viajero 2.
+  */
+
+  for (let i = 2; i <= cantidad; i++) {
+
+    const tarjeta = document.createElement("fieldset");
+
+    tarjeta.className = "acompanante-card seccion-registro";
+
+    tarjeta.innerHTML = `
+      <legend>Datos del viajero ${i}</legend>
+
+      <div class="campos-grid">
+
+        <div class="form-group full-width">
+          <label for="acompananteNombre${i}">
+            Nombre completo:
+          </label>
+
+          <input
+            type="text"
+            id="acompananteNombre${i}"
+            name="acompanantes[${i}][nombre]"
+            placeholder="Nombre completo del viajero"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="acompananteEdad${i}">
+            Edad:
+          </label>
+
+          <input
+            type="number"
+            id="acompananteEdad${i}"
+            name="acompanantes[${i}][edad]"
+            min="1"
+            max="120"
+            placeholder="Ej. 25"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="acompananteNacionalidad${i}">
+            Nacionalidad:
+          </label>
+
+          <input
+            type="text"
+            id="acompananteNacionalidad${i}"
+            name="acompanantes[${i}][nacionalidad]"
+            placeholder="Escribe su nacionalidad"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="acompananteTienePasaporte${i}">
+            ¿Cuentas con número de pasaporte?
+          </label>
+
+          <select
+            id="acompananteTienePasaporte${i}"
+            name="acompanantes[${i}][tienePasaporte]"
+            required
+          >
+            <option value="">Selecciona una opción</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <div
+          class="form-group"
+          id="campoPasaporteAcompanante${i}"
+          hidden
+        >
+          <label for="acompanantePasaporte${i}">
+            Número de pasaporte:
+          </label>
+
+          <input
+            type="text"
+            id="acompanantePasaporte${i}"
+            name="acompanantes[${i}][pasaporte]"
+            placeholder="Número de pasaporte"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="acompananteCelular${i}">
+            Celular:
+          </label>
+
+          <input
+            type="tel"
+            id="acompananteCelular${i}"
+            name="acompanantes[${i}][celular]"
+            placeholder="Número de celular"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="acompananteCorreo${i}">
+            Correo electrónico:
+          </label>
+
+          <input
+            type="email"
+            id="acompananteCorreo${i}"
+            name="acompanantes[${i}][correo]"
+            placeholder="ejemplo@correo.com"
+            required
+          >
+        </div>
+
+      </div>
+    `;
+
+    acompanantesContainer.appendChild(tarjeta);
+
+    /* PREGUNTA CONDICIONAL DEL PASAPORTE DEL ACOMPAÑANTE */
+
+    const preguntaPasaporte = document.getElementById(
+      "acompananteTienePasaporte" + i
+    );
+
+    const campoPasaporte = document.getElementById(
+      "campoPasaporteAcompanante" + i
+    );
+
+    const inputPasaporte = document.getElementById(
+      "acompanantePasaporte" + i
+    );
+
+    preguntaPasaporte.addEventListener("change", function() {
+
+      const mostrar = this.value === "si";
+
+      campoPasaporte.hidden = !mostrar;
+
+      inputPasaporte.required = mostrar;
+
+      if (!mostrar) {
+        inputPasaporte.value = "";
+      }
+
+    });
+
+  }
+
+}
+
+/* GENERAR UN SELECTOR DE ASIENTO POR CADA VIAJERO */
+
+function generarAsientos(cantidad) {
 
   asientosLista.innerHTML = "";
 
   if (!Number.isInteger(cantidad) || cantidad < 1) {
+
     const mensaje = document.createElement("p");
+
     mensaje.textContent =
       "Primero indica el número de viajeros en la sección de datos personales.";
 
     asientosLista.appendChild(mensaje);
+
     return;
   }
 
-  // Evita generar una cantidad excesiva de selectores.
   if (cantidad > 20) {
+
     const mensaje = document.createElement("p");
+
     mensaje.textContent =
       "Para este formulario, el máximo permitido es de 20 viajeros.";
 
     asientosLista.appendChild(mensaje);
+
     return;
   }
 
   for (let i = 1; i <= cantidad; i++) {
+
     const grupo = document.createElement("div");
+
     grupo.className = "asiento-viajero";
 
     const etiqueta = document.createElement("label");
+
     etiqueta.htmlFor = "asiento" + i;
-    etiqueta.textContent = "Viajero " + i + " - Elección de asiento";
+
+    etiqueta.textContent =
+      "Viajero " + i + " - Elección de asiento";
 
     const selector = document.createElement("select");
+
     selector.id = "asiento" + i;
     selector.name = "asientos[]";
     selector.required = true;
 
     const opcionInicial = document.createElement("option");
+
     opcionInicial.value = "";
     opcionInicial.textContent = "Selecciona tu asiento";
     opcionInicial.disabled = true;
     opcionInicial.selected = true;
 
     const opcionVentanilla = document.createElement("option");
+
     opcionVentanilla.value = "Ventanilla";
     opcionVentanilla.textContent = "Ventanilla";
 
     const opcionPasillo = document.createElement("option");
+
     opcionPasillo.value = "Pasillo";
     opcionPasillo.textContent = "Pasillo";
 
@@ -1294,17 +1586,95 @@ function generarAsientos() {
     grupo.appendChild(selector);
 
     asientosLista.appendChild(grupo);
+
   }
+
 }
 
-cantidadViajeros.addEventListener("input", generarAsientos);
+/* ACTUALIZAR LOS FORMULARIOS SEGÚN LA CANTIDAD DE VIAJEROS */
+
+function actualizarViajeros() {
+
+  const cantidad = Number(cantidadViajeros.value);
+
+  if (
+    cantidadViajeros.value === "" ||
+    !Number.isInteger(cantidad) ||
+    cantidad < 1
+  ) {
+
+    generarAcompanantes(0);
+
+    asientosLista.innerHTML = `
+      <p>
+        Primero indica el número de viajeros
+        en la sección de datos personales.
+      </p>
+    `;
+
+    return;
+  }
+
+  if (cantidad > 20) {
+
+    acompanantesContainer.innerHTML = "";
+
+    asientosLista.innerHTML = `
+      <p>
+        Para este formulario, el máximo permitido es de 20 viajeros.
+      </p>
+    `;
+
+    return;
+  }
+
+  generarAcompanantes(cantidad);
+
+  generarAsientos(cantidad);
+
+}
+
+/* EVENTO DEL NÚMERO DE VIAJEROS */
+
+cantidadViajeros.addEventListener("input", function() {
+
+  const cantidad = Number(this.value);
+
+  if (this.value === "") {
+    actualizarViajeros();
+    return;
+  }
+
+  if (cantidad > 20) {
+    acompanantesContainer.innerHTML = "";
+
+    asientosLista.innerHTML = `
+      <p>
+        El máximo permitido es de 20 viajeros.
+      </p>
+    `;
+
+    return;
+  }
+
+  if (Number.isInteger(cantidad) && cantidad >= 1) {
+    actualizarViajeros();
+  }
+
+});
 
 cantidadViajeros.addEventListener("change", function() {
+
   if (this.value !== "" && Number(this.value) < 1) {
     this.value = 1;
   }
 
-  generarAsientos();
+  if (Number(this.value) > 20) {
+    this.value = 20;
+  }
+
+  actualizarViajeros();
+
 });
 
 /* VALIDACIÓN DE FECHAS */
@@ -1313,11 +1683,16 @@ const fechaInicio = document.getElementById("fechaInicio");
 const fechaRegreso = document.getElementById("fechaRegreso");
 
 fechaInicio.addEventListener("change", function() {
+
   fechaRegreso.min = this.value;
 
-  if (fechaRegreso.value && fechaRegreso.value < this.value) {
+  if (
+    fechaRegreso.value &&
+    fechaRegreso.value < this.value
+  ) {
     fechaRegreso.value = "";
   }
+
 });
 
 /* VALIDACIÓN DEL FORMULARIO */
@@ -1325,6 +1700,7 @@ fechaInicio.addEventListener("change", function() {
 document.getElementById("formRegistro").addEventListener(
   "submit",
   function(event) {
+
     event.preventDefault();
 
     if (!this.checkValidity()) {
@@ -1333,8 +1709,13 @@ document.getElementById("formRegistro").addEventListener(
     }
 
     if (fechaRegreso.value < fechaInicio.value) {
-      alert("La fecha de regreso no puede ser anterior a la fecha de inicio.");
+
+      alert(
+        "La fecha de regreso no puede ser anterior a la fecha de inicio."
+      );
+
       fechaRegreso.focus();
+
       return;
     }
 
@@ -1342,6 +1723,7 @@ document.getElementById("formRegistro").addEventListener(
       "¡Solicitud elaborada correctamente! " +
       "Los datos del formulario están completos."
     );
+
   }
 );
 
